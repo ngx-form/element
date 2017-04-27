@@ -1,7 +1,7 @@
 {
   "name": "@ngx-form/element",
   "version": "0.1.0",
-  "description": "Description",
+  "description": "Angular 2+ component to dynamically create html form element using data attribute with previously configured component with element name",
   "author": "Ścibor Rudnicki <scibor.rudnicki@wwwdev.io> (http://ngx-form.wwwwdev.io)",
   "homepage": "https://github.com/ngx-form/element#readme",
   "main": "dist/bundle.umd.js",
@@ -23,7 +23,8 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@ngx-core/common": "^0.1.0",
+    "@ngx-core/common": "^0.1.1",
+    "@ngx-form/interface": "^0.1.0",
     "lodash": "^4.17.4"
   },
   "devDependencies": {
