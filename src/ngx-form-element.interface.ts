@@ -1,8 +1,7 @@
-// external
-import { ComponentDecorator, Type } from '@angular/core';
 
 // internal
-import { autocomplete, autofocus, disabled, element, FormComponentInterface, input, readonly, required } from '@ngx-form/core';
+import { autocomplete, autofocus, disabled, element, input, readonly, required } from '@ngx-form/type';
+import { FormComponentInterface } from '@ngx-form/interface';
 
 export interface DestroyInterface {
   onCancelled: boolean;
