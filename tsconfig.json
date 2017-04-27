@@ -5,8 +5,8 @@
     "skipTemplateCodegen": true,
     "skipMetadataEmit" : false
   },
+  "compileOnSave": false,
   "compilerOptions": {
-    "compileOnSave": false,
     "declaration": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
