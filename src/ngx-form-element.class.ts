@@ -12,11 +12,10 @@ import {
   FormElementDataInterface,
   FormElementInputInterface,
   FormSelectInterface,
-} from './ngx-form-element.interface';
+} from '@ngx-form/interface';
 
-import { DynamicComponentClass } from '@ngx-core/common';
-import { component } from '@ngx-core/common';
-import { autocomplete, element, event, input, required } from '@ngx-form/core';
+import { component, DynamicComponentClass } from '@ngx-core/common';
+import { autocomplete, element, event, input, required } from '@ngx-form/type';
 import { FormElementService } from './ngx-form-element.service';
 
 export abstract class FormElementClass extends DynamicComponentClass {
