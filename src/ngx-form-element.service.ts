@@ -28,7 +28,7 @@ export class FormElementService {
    * @param element name of html element for example 'input'
    */
   element(element: element): any {
-    let t: component = null;
+    let t: component | null = null;
     if (element) {
       if (this.config) {
         if (this.config.types instanceof Array && this.config.types.length > 0) {
