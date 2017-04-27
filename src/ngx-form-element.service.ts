@@ -2,7 +2,7 @@
 import { Inject, Injectable, Optional, Type } from '@angular/core';
 
 // internal
-import { component } from '@ngx-core/type';
+import { component } from '@ngx-core/common';
 import { element } from '@ngx-form/type';
 import { FormComponentInterface } from '@ngx-form/interface';
 import { FormElementConfigInterface } from './ngx-form-element.interface';
