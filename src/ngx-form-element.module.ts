@@ -7,12 +7,24 @@ import { FormElementComponent } from './ngx-form-element.component';
 import { FormElementService } from './ngx-form-element.service';
 import { FormElementConfig } from './ngx-form-element.service';
 
+/**
+ * To dynamic create HTML Form Elements.
+ * @export
+ * @class FormElementModule
+ */
 @NgModule({
   imports: [ CommonModule ],
   declarations: [ FormElementComponent ],
   exports: [ FormElementComponent ]
 })
 export class FormElementModule {
+  /**
+   * forRoot with param config to configure before html elements.
+   * @static
+   * @param {FormElementConfig} config
+   * @returns {ModuleWithProviders}
+   * @memberof FormElementModule
+   */
   static forRoot(config: FormElementConfig): ModuleWithProviders {
     return {
       ngModule: FormElementModule,
@@ -26,6 +38,11 @@ export class FormElementModule {
     };
   }
 
+  /**
+   * @static
+   * @returns
+   * @memberof FormElementModule
+   */
   static forChild() {
     return {
       ngModule: FormElementModule
