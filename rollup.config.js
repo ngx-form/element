@@ -4,6 +4,7 @@ import html from 'rollup-plugin-html';
 import nodeResolve from 'rollup-plugin-node-resolve';
 import typescript from 'rollup-plugin-typescript';
 import uglify from 'rollup-plugin-uglify';
+import { minify } from 'uglify-es';
 
 export default {
   entry: 'dist/index.js',
@@ -14,7 +15,6 @@ export default {
   moduleName: '@ngx-form/element',
   onwarn,
   plugins: [
-    // angular(),
     commonjs({
       namedExports: {
         'node_modules/rxjs/**': ['named']
@@ -49,7 +49,7 @@ export default {
     typescript({
       typescript: require('./node_modules/typescript')
     }),
-    uglify()  
+    uglify({}, minify)
   ],
   globals: {
     '@angular/core': 'ng.core'
