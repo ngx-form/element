@@ -1,24 +1,20 @@
-// import 'es6-shim';
-require('reflect-metadata');
-require('core-js/es6');
-require('core-js/es7/reflect');
+import 'reflect-metadata';
+import 'core-js/es6';
+import 'core-js/es7/reflect';
 
-// Typescript emit helpers polyfill
-require('ts-helpers');
-
-require('zone.js/dist/zone');
-require('zone.js/dist/long-stack-trace-zone');
-require('zone.js/dist/proxy'); // since zone.js 0.6.15
-require('zone.js/dist/sync-test');
-require('zone.js/dist/jasmine-patch'); // put here since zone.js 0.6.14
-require('zone.js/dist/async-test');
-require('zone.js/dist/fake-async-test');
+import 'zone.js/dist/zone';
+import 'zone.js/dist/long-stack-trace-zone';
+import 'zone.js/dist/proxy';
+import 'zone.js/dist/sync-test';
+import 'zone.js/dist/jasmine-patch';
+import 'zone.js/dist/async-test';
+import 'zone.js/dist/fake-async-test';
 
 // RxJS
-require('rxjs/Rx');
+import 'rxjs/Rx';
 
-const browser = require('@angular/platform-browser-dynamic/testing');
-const testing = require('@angular/core/testing');
+import * as browser from '@angular/platform-browser-dynamic/testing';
+import * as testing from '@angular/core/testing';
 
 testing.TestBed.initTestEnvironment(
   browser.BrowserDynamicTestingModule,
