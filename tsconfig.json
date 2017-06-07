@@ -29,7 +29,7 @@
     ]
   },
   "files": [
-    "src/index.ts",
-    "typings.d.ts"
+    "typings.d.ts",
+    "src/index.ts"
   ]
 }
