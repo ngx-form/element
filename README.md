@@ -87,7 +87,7 @@ How do I know when to release 1.0.0?
 
 ## License
 
-MIT © wwwdev.io
+MIT © ngx-form
 
 ## Donate
 [Click to donate](https://donorbox.org/help-creating-open-source-software)
