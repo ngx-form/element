@@ -1,3 +1,4 @@
+// external
 import {
   ComponentFactoryResolver,
   EventEmitter,
@@ -5,17 +6,14 @@ import {
   Input,
   Output
 } from '@angular/core';
-const lodash = require('lodash');
 
-import {
-  DestroyInterface,
-  FormElementDataInterface
-} from '@ngx-form/interface';
-
-import { HtmlAttributesInterface } from '@ngx-form/interface';
-
+import * as _ from 'lodash-es';
+// TODO: remove when test in karma ...
+import { DestroyInterface, FormElementDataInterface } from '@ngx-form/interface';
 import { component, DynamicComponentClass } from '@ngx-core/common';
 import { autocomplete, disabled, element, event, input, required } from '@ngx-form/type';
+
+// internal
 import { FormElementService } from './ngx-form-element.service';
 
 /**
@@ -503,7 +501,7 @@ export abstract class FormElementClass extends DynamicComponentClass {
     if (data) {
       // console.log(`properties`, data, this);
       const oldThis = Object.assign(this);
-      lodash.forEach(data, (value: any, key: any) => {
+      _.forEach(data, (value: any, key: any) => {
         // console.log(`key: `, key, `, this[key]: `, this[key], ` === `, `oldThis[key]`, oldThis[key], `value: `, value);
         if (key !== 'data') {
           if (value !== oldThis[key]) {
@@ -553,11 +551,11 @@ export abstract class FormElementClass extends DynamicComponentClass {
   protected updateData(data: FormElementDataInterface): void {
     if (data) {
       const oldInstance = Object.assign({}, this.CreatedElementComponent().instance);
-      lodash.reduce(data, (result: any, value: any, key: any) => {
+      _.reduce(data, (result: any, value: any, key: any) => {
         console.log(`key: `, key, `this.${key.replace('_', '')}: `, this[key.replace('_', '')], '===',
           this.CreatedElementComponent().instance[key.replace('_', '')], `oldInstance: `, oldInstance[key.replace('_', '')]);
         /*
-        if (lodash.isEqual(value, t[key]) === false) {
+        if (_.isEqual(value, t[key]) === false) {
           this[key] = this.data[key];
         }
         *
