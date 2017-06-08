@@ -373,9 +373,11 @@ export abstract class FormElementClass extends DynamicComponentClass {
   protected viewValue: Array<any>;
 
   // Events
-  @Output() cancelled: EventEmitter<any>  = new EventEmitter(false);
-  @Output() changed: EventEmitter<any>    = new EventEmitter(false);
-  @Output() submitted: EventEmitter<any>  = new EventEmitter(false);
+  @Output() cancelled: EventEmitter<any> = new EventEmitter();
+  @Output() changed: EventEmitter<any> = new EventEmitter();
+  @Output() created: EventEmitter<any> = new EventEmitter();
+  @Output() destroyed: EventEmitter<any> = new EventEmitter();
+  @Output() submitted: EventEmitter<any> = new EventEmitter();
 
   /**
    * Creates an instance of FormElementClass.
@@ -401,6 +403,8 @@ export abstract class FormElementClass extends DynamicComponentClass {
   private create(component: component, properties?: string | Array<string>): void {
     if (this.type && this.model) {
       this.__create(component);
+      this.created.emit(true);
+      this.destroyed.emit(false);
       if (properties) {
         this.set(properties);
       }
@@ -522,6 +526,8 @@ export abstract class FormElementClass extends DynamicComponentClass {
     if (destroy === true) {
       this.removed = destroy;
       this.__destroy();
+      this.created.emit(false);
+      this.destroyed.emit(true);
     }
   }
 
