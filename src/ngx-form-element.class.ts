@@ -2,19 +2,26 @@
 import {
   ComponentFactoryResolver,
   EventEmitter,
-  Inject,
+  Injectable,
   Input,
   Output
 } from '@angular/core';
-
-import * as _ from 'lodash-es';
-// TODO: remove when test in karma ...
-import { DestroyInterface, FormElementDataInterface } from '@ngx-form/interface';
 import { component, DynamicComponentClass } from '@ngx-core/common';
-import { autocomplete, disabled, element, event, input, required } from '@ngx-form/type';
+import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
+import * as _ from 'lodash-es';
+
+// TODO: remove when test in karma ...
+import {
+  DestroyInterface,
+  FormElementInterface,
+  ValidatorsHolderInterface
+} from '@ngx-form/interface';
+
+import { element } from '@ngx-form/type';
 
 // internal
 import { FormElementService } from './ngx-form-element.service';
+import { ValidatorService } from './ngx-form-element-validator.service';
 
 /**
  * @export
@@ -23,6 +30,79 @@ import { FormElementService } from './ngx-form-element.service';
  * @extends {DynamicComponentClass}
  */
 export abstract class FormElementClass extends DynamicComponentClass {
+  /**
+   * Main @Input('config') that is used to assign all possible `properties` specified in its interface.
+   * @type {FormElementDataInterface}
+   * @memberof FormElementClass
+   */
+  @Input('config') config: FormElementInterface;
+
+    /**
+   * @type {FormGroup}
+   * @memberof FormElementClass
+   */
+  _formGroup: FormGroup;
+  @Input('form') set formGroup(formGroup: FormGroup) {
+    this._formGroup = formGroup;
+  }
+  get formGroup(): FormGroup {
+    return this._formGroup;
+  }
+
+  /**
+   * Property of `any` type for html angular attribute `[(NgModel)]` or for formGroup.
+   */
+  @Input('model') model: Object;
+
+  /**
+   * HTML Form Element of component name like for example 'checkbox' 'input' in config to dynamic create.
+   * Important thing the same time you set property `elementComponent` will be set to just founded component from `FormElementService`
+   * @type {element}
+   * @memberof FormElementClass
+   */
+  _element: element;
+  set element(e: element) {
+    this._element = e;
+    this.elementComponent = this.formElementService.find(e);
+    if (!this.elementComponent) {
+      throw new Error(`
+        You need to define config for example as below:
+        FormElementModule.forRoot({
+            elements: [
+              {
+                name: 'input',
+                component: YourInputComponent
+              },
+              {
+                name: 'select',
+                component: YourSelectComponent
+              }
+            ]
+          }),
+      `);
+    }
+  }
+  get element() {
+    return this._element;
+  }
+
+  /**
+   * property is assigned when element is found in FormElementService
+   */
+  elementComponent: component;
+
+  /**
+   * @type {formGroupName}
+   * @memberof FormElementClass
+  _formGroupName: string;
+  @Input() set formGroupName(formGroupName: string) {
+    this._formGroupName = formGroupName;
+    this.__set('formGroupName');
+  }
+  get formGroupName(): string {
+    return this._formGroupName;
+  }
+  */
 
   /**
    * Service to find in provided by user config connection real `component` from `entryComponents` with provided name.
@@ -30,347 +110,9 @@ export abstract class FormElementClass extends DynamicComponentClass {
    * @type {FormElementService}
    * @memberof FormElementClass
    */
-  protected formElementService: FormElementService;
+  // formElementService: FormElementService;
 
-  /**
-   * Property to use or not `autocomplete` functionality of input HTML Form Element.
-   * @protected
-   * @type {autocomplete}
-   * @memberof FormElementClass
-   */
-  protected _autocomplete: autocomplete = 'off';
-
-  /**
-   * Setter to define `_autocomplete` in extended class and created dynamic component instance property `__component`.
-   * @memberof FormElementClass
-   */
-  set autocomplete(autocomplete: autocomplete) {
-    // const z = arguments.callee.name;
-    // console.log(z);
-    this._autocomplete = autocomplete;
-    this.__set('autocomplete');
-  };
-  /**
-   * @readonly
-   * @memberof FormElementClass
-   */
-  get autocomplete() {
-    return this._autocomplete;
-  }
-
-  /**
-   * When to destroy dynamic component instance from property `__component`.
-   * @protected
-   * @type {DestroyInterface}
-   * @memberof FormElementClass
-   */
-  protected _destroy: DestroyInterface = {
-    onCancelled: false,
-    onChanged: false,
-    onSubmitted: false
-  };
-  /**
-   * Setter to define `_destroy` in extended class and created dynamic component instance property `__component`.
-   * @memberof FormElementClass
-   */
-  set destroy(destroy: DestroyInterface) {
-    this._destroy = destroy;
-    this.__set('destroy');
-  }
-  /**
-   * @readonly
-   * @memberof FormElementClass
-   */
-  get destroy() {
-    return this._destroy;
-  }
-
-  /**
-   * Property to disable or not functionality of specific HTML Form Element.
-   * @protected
-   * @type {disabled}
-   * @memberof FormElementClass
-   */
-  protected _disabled: disabled = '';
-  /**
-   * Setter to define `_disabled` in extended class and created dynamic component instance property `__component`.
-   * @memberof FormElementClass
-   */
-  set disabled(disabled: disabled) {
-    this._disabled = disabled;
-    this.__set('disabled');
-  };
-  /**
-   * @readonly
-   * @memberof FormElementClass
-   */
-  get disabled() {
-    return this._disabled;
-  }
-
-  /**
-   * HTML Form Element of component name like for example 'checkbox' 'input' in config to dynamic create.
-   * Important thing the same time you set property `elementComponent` will be set to just founded component from `FormElementService`
-   * @protected
-   * @type {element}
-   * @memberof FormElementClass
-   */
-  protected _element: element;
-  /**
-   * Setter to define `_element` in extended class and created dynamic component instance property `__component`.
-   * @memberof FormElementClass
-   */
   removed = false;
-  set element(element: element) {
-    this._element = element;
-    if (element === null) {
-      // console.log(`test`, element);
-      this.remove(true);
-    } else {
-      this.elementComponent = this.formElementService.find(element);
-      if (this.elementComponent === null) {
-        throw new Error(`
-          You need to define config for example as below:
-          FormElementModule.forRoot({
-              elements: [
-                {
-                  name: 'input',
-                  component: YourInputComponent
-                },
-                {
-                  name: 'select',
-                  component: YourSelectComponent
-                }
-              ]
-            }),
-        `);
-      } else {
-        if (!this.createdElementComponent() && this.removed === true) {
-          this.init();
-        }
-      }
-    }
-  }
-  /**
-   * @readonly
-   * @memberof FormElementClass
-   */
-  get element() {
-    return this._element;
-  }
-
-  /**
-   * Main @Input('data') that is used to assign all possible `properties` specified in its interface.
-   * @type {FormElementDataInterface}
-   * @memberof FormElementClass
-   */
-  _data: FormElementDataInterface;
-  /**
-   * Setter to define `_data` in extended class and created dynamic component instance property `__component`.
-   * @memberof FormElementClass
-   */
-  @Input() set data(data: FormElementDataInterface) {
-    console.log(`data`, data);
-    this._data = data;
-    this.properties(data);
-  }
-  /**
-   * @readonly
-   * @memberof FormElementClass
-   */
-  get data() {
-    return this._data;
-  }
-
-  /**
-   * @protected
-   * @type {*}
-   * @memberof FormElementClass
-   */
-  protected hint: any;
-
-  /**
-   * Key for the model property.
-   * @protected
-   * @type {string}
-   * @memberof FormElementClass
-   */
-  protected _key: string;
-  set key(key: string) {
-    this._key = key;
-  }
-  get key(): string {
-    return this._key;
-  }
-
-  /**
-   * HTML Form Element attribute used in for example `input`.
-   * @protected
-   * @type {number}
-   * @memberof FormElementClass
-   */
-  protected _max: number;
-  set max(max: number) {
-    this._max = max;
-  }
-  get max(): number {
-    return this._max;
-  }
-
-  /**
-   * @protected
-   * @type {number}
-   * @memberof FormElementClass
-   */
-  protected _min: number;
-  set min(min: number) {
-    this._min = min;
-  }
-  get min(): number {
-    return this._min;
-  }
-
-  /**
-   * HTML Form Element attribute used in for example `input`.
-   * @protected
-   * @type {number}
-   * @memberof FormElementClass
-   */
-  protected _maxlength: number;
-  /**
-   * Set property `_maxlength` value to this and to component instance from this `_component`.
-   * @param {number} type - The type of element
-   * @memberof FormElementClass
-   */
-  set maxlength(maxlength: number) {
-    this._maxlength = maxlength;
-    this.__set('maxlength');
-  }
-  /**
-   * Get property `minlength` from this component
-   * @returns {number} `_maxlength`
-   */
-  get maxlength() {
-    return this._maxlength;
-  }
-
-  /***
-   * Set property `minlength` value to this component and to created component instance in property _component
-   * @param {number} minlength
-   */
-  protected _minlength: number;
-  set minlength(minlength: number) {
-    this._minlength = minlength;
-    this.__set('minlength');
-  }
-  /**
-   * Get property `minlength` from this component
-   * @returns {number} `_minlength`
-   */
-  get minlength(): number {
-    return this._minlength;
-  }
-
-  /**
-   * Property of `any` type for html angular attribute `[(NgModel)]` or for formGroup.
-   */
-  protected _model: any;
-  /**
-   * Set property `model` value to this component and to created component instance in property _component.
-   * @param {any} model - in most case json
-   */
-  set model(model: any) {
-    this._model = model;
-    this.__set('model');
-  }
-  /**
-   * Get property `model` from this component
-   * @returns {any} `_model`
-   */
-  get model(): any {
-    return this._model;
-  }
-
-  /**
-   * Property of `string` type for html attribute `placeholder`.
-   */
-  protected _placeholder: string;
-  /**
-   * Set property `placeholder` value to this component and to created component instance in property _component.
-   * @param {string} placeholder
-   */
-  set placeholder(placeholder: string) {
-    this._placeholder = placeholder;
-    this.__set('placeholder');
-  }
-  /**
-   * Get property `placeholder` from this component
-   * @returns {string} placeholder
-   */
-  get placeholder(): string {
-    return this._placeholder;
-  }
-
-  /**
-   * property is assigned when element is found in FormElementService
-   */
-  protected _elementComponent: component;
-  set elementComponent(component: component) {
-    this._elementComponent = component;
-  }
-  get elementComponent(): component {
-    return this._elementComponent;
-  }
-
-  /**
-   * Set property `required` value to this component and to created component instance in property _component
-   * @param {required} required - Html element is required
-   */
-  protected _required: required;
-  set required(required: required) {
-    this._required = required;
-    this.__set('required');
-  };
-  /**
-   * Get property `type` from this component
-   * @returns {required} required
-   */
-  get required(): required {
-    return this._required;
-  }
-
-  /**
-   * html attribute property for input
-   * @protected
-   * @type {input}
-   * @memberof FormElementClass
-   */
-  protected _type: input;
-  /**
-   * Setter: set property `_type` value to this component and to created component instance in property _component
-   * @param {input} type - The type of element
-   * @memberof FormElementClass
-   */
-  set type(type: input) {
-    this._type = type;
-    this.__set('type');
-  }
-  /**
-   * @readonly
-   * @type {input}
-   * @memberof FormElementClass
-   */
-  get type(): input {
-    return this._type;
-  }
-
-  /**
-   *
-   * @protected
-   * @type {Array<any>}
-   * @memberof FormElementClass
-   */
-  protected viewValue: Array<any>;
 
   // Events
   @Output() cancelled: EventEmitter<any> = new EventEmitter();
@@ -388,71 +130,66 @@ export abstract class FormElementClass extends DynamicComponentClass {
    */
   constructor(
     componentFactoryResolver: ComponentFactoryResolver,
-    service: FormElementService
-    // @Inject(FormElementService) service: FormElementService
+    protected formElementService: FormElementService,
+    protected validatorService: ValidatorService
   ) {
     super(componentFactoryResolver);
-    this.formElementService = service;
   }
 
   /**
-   * Dynamically create new component from property `elementComponent` with properties `type` and `model`
-   * @private
+   * Dynamically create new component from property `elementComponent`
    * @memberof FormElementClass
    */
-  private create(component: component, properties?: string | Array<string>): void {
-    if (this.type && this.model) {
-      this.__create(component);
-      this.created.emit(true);
-      this.destroyed.emit(false);
-      if (properties) {
-        this.set(properties);
-      }
-    }
-  }
-
-  /**
-   * Get property `__component` from `DynamicComponentClass` using `__get`
-   * @returns {*}
-   * @memberof FormElementClass
-   */
-  public createdElementComponent(): any {
-    return this.__get('__component');
-  }
-
-  public get(property: string): any {
-    return this.__get(property);
-  }
-
-  /**
-   * Init create of new dynamic component using property elementComponent
-   * @protected
-   * @memberof FormElementClass
-   */
-  public init(): void {
+  public create(): void {
+    this.element = this.config.element;
     if (this.elementComponent) {
-      this.create(this.elementComponent);
-      this.set([
-        'autocomplete',
-        'destroy',
-        'disabled',
-        'element',
-        'hint',
-        'key',
-        'model',
-        'placeholder',
-        'required',
-        'max',
-        'min',
-        'maxlength',
-        'minlength',
-        'type',
-        'viewValue'
-      ]);
-      this.subscribe('cancelled', this.onCancelled);
-      this.subscribe('changed', this.onChanged);
-      this.subscribe('submitted', this.onSubmitted);
+      this.__create(this.elementComponent);
+      this.removed = false;
+
+      this.__assign<Object>('model', this.model);
+      this.__assign<FormGroup>('formGroup', this.formGroup);
+      this.formGroup.controls[this.config.key] = new FormControl();
+      this.validatorService.formControl = this.formGroup.controls[this.config.key];
+
+      // assign config to __component instance
+      if (this.config) {
+        Object.keys(this.config).forEach((key, index) => {
+          if (this.config[key] instanceof Object) {
+            Object.keys(this.config[key]).forEach(subkey => {
+              this.validatorService.patchValidators(subkey, this.config[key][subkey]);
+            });
+          }
+        })
+        for (const prop in this.config) {
+          if (prop) {
+            this.validatorService.patchValidators(prop, this.config[prop]);
+            this.__assign(prop, this.config[prop]);
+          }
+        }
+
+        this.__subscribe('cancelled', this.onCancelled);
+        this.__subscribe('changed', this.onChanged);
+        this.__subscribe('submitted', this.onSubmitted);
+
+        this.created.emit(true);
+        this.destroyed.emit(false);
+
+        // subscribe to valueChanges in formGroup
+        this.formControl().valueChanges.subscribe(model => this.updateValueAndValidity());
+      }
+    } else {
+      throw new Error('Provide property element.');
     }
+  }
+
+  /**
+   * returns form control of specified key
+   * @param {string} [key]
+   * @returns {AbstractControl}
+   * @memberof FormElementClass
+   */
+  public formControl(key?: string): AbstractControl {
+    return this.formGroup.controls[key ? key : this.config.key];
   }
 
   /**
@@ -462,8 +199,8 @@ export abstract class FormElementClass extends DynamicComponentClass {
    */
   private onCancelled = (result: any) => {
     this.cancelled.emit(result);
-    if (this.destroy && this.destroy.onCancelled === true) {
-      this.remove(this.destroy.onCancelled);
+    if (this.config.destroy && this.config.destroy.onCancelled === true) {
+      this.remove(this.config.destroy.onCancelled);
     }
   }
 
@@ -476,8 +213,8 @@ export abstract class FormElementClass extends DynamicComponentClass {
     if (result) {
       this.changed.emit(result);
     }
-    if (this.destroy && this.destroy.onChanged === true) {
-      this.remove(this.destroy.onChanged);
+    if (this.config.destroy && this.config.destroy.onChanged === true) {
+      this.remove(true);
     }
   }
 
@@ -490,29 +227,9 @@ export abstract class FormElementClass extends DynamicComponentClass {
     if (result) {
       this.submitted.emit(result);
     }
-    if (this.destroy && this.destroy.onSubmitted === true) {
-      this.remove(this.destroy.onSubmitted);
-    }
-  }
-
-  /**
-   * Set all properties from @param data to this object
-   * @protected
-   * @param {FormElementDataInterface} data - provide properties you want to use
-   * @memberof FormElementClass
-   */
-  protected properties(data: FormElementDataInterface): void {
-    if (data) {
-      // console.log(`properties`, data, this);
-      const oldThis = Object.assign(this);
-      _.forEach(data, (value: any, key: any) => {
-        // console.log(`key: `, key, `, this[key]: `, this[key], ` === `, `oldThis[key]`, oldThis[key], `value: `, value);
-        if (key !== 'data') {
-          if (value !== oldThis[key]) {
-            this[key] = value;
-          }
-        }
-      });
+    if (this.config.destroy && this.config.destroy.onSubmitted === true) {
+      console.log(`onSubmitted`);
+      this.remove(true);
     }
   }
 
@@ -524,49 +241,35 @@ export abstract class FormElementClass extends DynamicComponentClass {
    */
   public remove(destroy?: boolean): void {
     if (destroy === true) {
-      this.removed = destroy;
       this.__destroy();
+      this.removed = true;
+
+      // emit created and destroyed
       this.created.emit(false);
       this.destroyed.emit(true);
+
+      // remove form control
+      this.removeFormControl();
     }
   }
 
   /**
-   * Define properties in property `__component` instance
-   * @param {(string | Array<string>)} property
+   * Remove formGroup control with timeout
    * @memberof FormElementClass
    */
-  private set(property: string | Array<string>) {
-    this.__set(property);
+  removeFormControl() {
+    setTimeout(() => {
+      this.formGroup.removeControl(this.config.key);
+    });
   }
 
   /**
-   * Subscribe to @Output property in property `__component` instance
-   * @public
-   * @param {string} property - property from dynamic component
-   * @param {*} [callback]
-   * @param {*} [error]
-   * @param {*} [complete]
+   * formGroup updateValueAndValidity with timeout
    * @memberof FormElementClass
    */
-  public subscribe(property: string, callback?: any, error?: any, complete?: any): void {
-    this.__subscribe(property, callback, error, complete);
+  updateValueAndValidity() {
+    setTimeout(() => {
+      this.formGroup.updateValueAndValidity();
+    });
   }
-
-  /*
-  protected updateData(data: FormElementDataInterface): void {
-    if (data) {
-      const oldInstance = Object.assign({}, this.CreatedElementComponent().instance);
-      _.reduce(data, (result: any, value: any, key: any) => {
-        console.log(`key: `, key, `this.${key.replace('_', '')}: `, this[key.replace('_', '')], '===',
-          this.CreatedElementComponent().instance[key.replace('_', '')], `oldInstance: `, oldInstance[key.replace('_', '')]);
-        /*
-        if (_.isEqual(value, t[key]) === false) {
-          this[key] = this.data[key];
-        }
-        *
-      }, []);
-    }
-  }
-  */
 }
