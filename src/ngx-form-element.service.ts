@@ -1,5 +1,5 @@
 // external
-import { Inject, Injectable, Optional, Type } from '@angular/core';
+import { Injectable, Optional } from '@angular/core';
 
 // internal
 import { component } from '@ngx-core/common';
@@ -14,17 +14,23 @@ import { FormElementConfigInterface, ConfigElementInterface } from '@ngx-form/in
  */
 export class FormElementConfig implements FormElementConfigInterface {
   elements: Array<ConfigElementInterface>;
+  errorMessages?: {};
 };
 
 /**
  * Service to hold the config with configured elements component
  * @export
- * @class FormElementService
+ * @class FormElementServiceFormElementConfig
  */
 @Injectable()
 export class FormElementService {
-
   private _config: FormElementConfig;
+  set config(config: FormElementConfig) {
+    this._config = config;
+  }
+  get config(): FormElementConfig {
+    return this._config;
+  }
 
   /**
    * Creates an instance of FormElementService.
@@ -40,16 +46,16 @@ export class FormElementService {
 
   /**
    * Search element `name` in config `elements` and return component assigned to it.
-   * @param {element} element name of html element for example 'input'
+   * @param {e} element name of html element for example 'input'
    * @returns {null | any}
    */
-  find(element: element): null | any {
+  find(e: element): null | any {
     let t: component | null = null;
-    if (element) {
+    if (e) {
       if (this.config) {
         if (this.config.elements instanceof Array && this.config.elements.length > 0) {
           this.config.elements.forEach((value, index) => {
-            if (value['name'] === element) {
+            if (value['name'] === e) {
               t = value.component;
             }
           });
@@ -57,12 +63,5 @@ export class FormElementService {
       }
     }
     return t;
-  }
-
-  set config(config: FormElementConfig) {
-    this._config = config;
-  }
-  get config(): FormElementConfig {
-    return this._config;
   }
 }
