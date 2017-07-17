@@ -228,7 +228,6 @@ export abstract class FormElementClass extends DynamicComponentClass {
       this.submitted.emit(result);
     }
     if (this.config.destroy && this.config.destroy.onSubmitted === true) {
-      console.log(`onSubmitted`);
       this.remove(true);
     }
   }

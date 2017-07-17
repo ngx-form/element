@@ -71,7 +71,6 @@ export class FormElementComponent extends FormElementClass implements DoCheck, O
     changes.forEachAddedItem((record: KeyValueChangeRecord<string, any>) => null);
     // changed
     changes.forEachChangedItem((record: KeyValueChangeRecord<string, any>) => {
-      console.log(`forEachChangedItem`, record.key, record.currentValue);
       switch (record.key) {
         case 'element':
           // remove form element
