@@ -22,6 +22,9 @@ import {
 } from '@ngx-form/type';
 import { ValidatorService } from './ngx-form-element-validator.service';
 
+/*
+  TODO: cannot use template because of error in @ngx-form/material
+*/
 import template from './ngx-form-element.component.html';
 /**
  * Dynamic create HTML Form Elements
