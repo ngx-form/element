@@ -29,9 +29,9 @@ module.exports = function(config) {
     plugins: [
       require('karma-chrome-launcher'),
       require('karma-coverage'),
-      require('karma-rollup-plugin'),
-      require('karma-jasmine')
-      // require('karma-typescript')
+      require('karma-rollup-preprocessor'),
+      require('karma-jasmine'),
+      require('karma-typescript')
     ],    
 
     // list of files to exclude
@@ -48,7 +48,7 @@ module.exports = function(config) {
     rollupPreprocessor: {
       context: 'this',
       // will help to prevent conflicts between different tests entries
-      moduleName: '@ngx-form/element',
+      moduleName: 'ngxformelement',
       format: 'iife',
       sourceMap: false,
       // rollup settings. See Rollup documentation
