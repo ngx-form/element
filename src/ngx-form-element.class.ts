@@ -19,11 +19,7 @@ import {
 import * as _ from 'lodash-es';
 
 /* TODO: remove when test in karma ... */
-import {
-  DestroyInterface,
-  FormElementInterface,
-  ValidatorsHolderInterface
-} from '@ngx-form/interface';
+import { FormElementInterface } from '@ngx-form/interface';
 import { element } from '@ngx-form/type';
 
 // internal
@@ -111,14 +107,6 @@ export abstract class FormElementClass extends DynamicComponentClass {
   }
   */
 
-  /**
-   * Service to find in provided by user config connection real `component` from `entryComponents` with provided name.
-   * @protected
-   * @type {FormElementService}
-   * @memberof FormElementClass
-   */
-  // formElementService: FormElementService;
-
   removed = false;
 
   // Events
@@ -131,7 +119,9 @@ export abstract class FormElementClass extends DynamicComponentClass {
   /**
    * Creates an instance of FormElementClass.
    * @param {ComponentFactoryResolver} componentFactoryResolver
-   * @param {FormElementService} service
+   * @param {FormBuilder} formBuilder
+   * @param {FormElementService} formElementService
+   * @param {ValidatorService} validatorService
    * @memberof FormElementClass
    */
   constructor(
@@ -276,6 +266,13 @@ export abstract class FormElementClass extends DynamicComponentClass {
     });
   }
 
+  /**
+   * @param {string} property
+   * @param {*} [callback]
+   * @param {*} [error]
+   * @param {*} [complete]
+   * @memberof FormElementClass
+   */
   subscribe(property: string, callback?: any, error?: any, complete?: any): void {
     this.__subscribe(property, callback, error, complete);
   }
