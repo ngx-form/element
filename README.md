@@ -24,42 +24,49 @@ Usage demonstration of a @ngx-form/element package coming soon
 To install, run:
 
 ```bash
-npm install --save @ngx-form/element @ngx-form/material
+// dependency packages
+npm install --save @ngx-core/common @ngx-form/interface @ngx-form/type
+```
+
+```bash
+// primary package
+npm install --save @ngx-form/element
 ```
 
 ## Usage
 ```typescript
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { MaterialModule } from '@angular/material';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 
 // internal
 import { FormElementModule } from '@ngx-form/element';
-import { FormMaterialModule, FormMaterialInputComponent, FormMaterialSelectComponen } from '@ngx-form/material';
+import { InputComponent } from './input.component';
+import { SelectComponent } from './select.component';
 
 @NgModule({
+  entryComponents: [
+    InputComponent,
+    SelectComponent
+  ],
   imports: [
     // external
     BrowserModule,
-    FormsModule,
-    MaterialModule,
     ReactiveFormsModule,
 
     // internal
     FormElementModule.forRoot({
-      types: [
+      elements: [
         {
-          type: 'input',
-          component: FormMaterialInputComponent
+          name: 'input',
+          component: InputComponent // your component here
         },
         {
-          type: 'select',
-          component: FormMaterialSelectComponent
+          name: 'select',
+          component: SelectComponent // your component here
         }
       ]
-    }),
-    FormMaterialModule
+    })
   ],
   declarations: [ ]
 })
