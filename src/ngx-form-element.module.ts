@@ -1,6 +1,6 @@
 // external
-import { ModuleWithProviders, NgModule, Optional } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Inject, ModuleWithProviders, NgModule, Optional } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
 // internal
@@ -17,7 +17,6 @@ import { ValidatorService } from './ngx-form-element-validator.service';
 @NgModule({
   imports: [
     CommonModule,
-    FormsModule,
     ReactiveFormsModule
   ],
   declarations: [ FormElementComponent ],
@@ -31,7 +30,7 @@ export class FormElementModule {
    * @returns {ModuleWithProviders}
    * @memberof FormElementModule
    */
-  static forRoot(@Optional() config: FormElementConfig): ModuleWithProviders {
+  static forRoot( @Optional() @Inject(FormElementConfig) config?: FormElementConfig): ModuleWithProviders {
     return {
       ngModule: FormElementModule,
       providers: (config) ?
