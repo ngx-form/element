@@ -1,21 +1,21 @@
-
+// externals
 import {
   ChangeDetectorRef,
-  ChangeDetectionStrategy,
   Component,
   ComponentFactoryResolver,
   DoCheck,
+  forwardRef,
   Inject,
   KeyValueDiffers,
   KeyValueChangeRecord,
   OnInit
 } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
 
 import * as _ from 'lodash-es';
 
 import { FormElementClass } from './ngx-form-element.class';
 import { FormElementService } from './ngx-form-element.service';
-import { FormElementInterface, MdInputAttributesInterface } from '@ngx-form/interface';
 import {
   accesskey,
   required
@@ -31,7 +31,6 @@ import template from './ngx-form-element.component.html';
  * @implements {OnInit}
  */
 @Component({
-  changeDetection: ChangeDetectionStrategy.Default,
   selector: 'form-element',
   template: '<div #container></div>'
 })
@@ -46,13 +45,15 @@ export class FormElementComponent extends FormElementClass implements DoCheck, O
    */
   constructor(
     componentFactoryResolver: ComponentFactoryResolver,
-    protected formElementService: FormElementService,
+    protected formBuilder: FormBuilder,
+    protected formElementService: FormElementService, // @Inject(forwardRef(() => FormElementService)) 
     private keyValueDiffers: KeyValueDiffers,
     private changeDetectorRef: ChangeDetectorRef,
-    protected validatorService: ValidatorService
+    protected validatorService: ValidatorService // @Inject(forwardRef(() => ValidatorService))
   ) {
     super(
       componentFactoryResolver,
+      formBuilder,
       formElementService,
       validatorService
     );
