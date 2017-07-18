@@ -2,21 +2,28 @@
 import {
   ComponentFactoryResolver,
   EventEmitter,
+  forwardRef,
+  Inject,
   Injectable,
   Input,
   Output
 } from '@angular/core';
 import { component, DynamicComponentClass } from '@ngx-core/common';
-import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators
+} from '@angular/forms';
 import * as _ from 'lodash-es';
 
-// TODO: remove when test in karma ...
+/* TODO: remove when test in karma ... */
 import {
   DestroyInterface,
   FormElementInterface,
   ValidatorsHolderInterface
 } from '@ngx-form/interface';
-
 import { element } from '@ngx-form/type';
 
 // internal
@@ -125,13 +132,13 @@ export abstract class FormElementClass extends DynamicComponentClass {
    * Creates an instance of FormElementClass.
    * @param {ComponentFactoryResolver} componentFactoryResolver
    * @param {FormElementService} service
-   *
    * @memberof FormElementClass
    */
   constructor(
     componentFactoryResolver: ComponentFactoryResolver,
-    protected formElementService: FormElementService,
-    protected validatorService: ValidatorService
+    protected formBuilder: FormBuilder,
+    protected formElementService: FormElementService, // @Inject(forwardRef(() => FormElementService))
+    protected validatorService: ValidatorService // @Inject(forwardRef(() => ValidatorService))
   ) {
     super(componentFactoryResolver);
   }
@@ -145,7 +152,10 @@ export abstract class FormElementClass extends DynamicComponentClass {
     if (this.elementComponent) {
       this.__create(this.elementComponent);
       this.removed = false;
-
+      // add formGroup if not exists
+      if (!this.formGroup) {
+        this.formGroup = this.formBuilder.group({});
+      }
       this.__assign<Object>('model', this.model);
       this.__assign<FormGroup>('formGroup', this.formGroup);
       this.formGroup.controls[this.config.key] = new FormControl();
@@ -190,6 +200,10 @@ export abstract class FormElementClass extends DynamicComponentClass {
    */
   public formControl(key?: string): AbstractControl {
     return this.formGroup.controls[key ? key : this.config.key];
+  }
+
+  public get(property: string): any {
+    return this.__get(property);
   }
 
   /**
@@ -260,6 +274,10 @@ export abstract class FormElementClass extends DynamicComponentClass {
     setTimeout(() => {
       this.formGroup.removeControl(this.config.key);
     });
+  }
+
+  subscribe(property: string, callback?: any, error?: any, complete?: any): void {
+    this.__subscribe(property, callback, error, complete);
   }
 
   /**
