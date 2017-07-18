@@ -16,10 +16,6 @@ import * as _ from 'lodash-es';
 
 import { FormElementClass } from './ngx-form-element.class';
 import { FormElementService } from './ngx-form-element.service';
-import {
-  accesskey,
-  required
-} from '@ngx-form/type';
 import { ValidatorService } from './ngx-form-element-validator.service';
 
 /*
@@ -43,7 +39,11 @@ export class FormElementComponent extends FormElementClass implements DoCheck, O
   /**
    * Creates an instance of FormElementComponent.
    * @param {ComponentFactoryResolver} componentFactoryResolver
+   * @param {FormBuilder} formBuilder
    * @param {FormElementService} formElementService
+   * @param {KeyValueDiffers} keyValueDiffers
+   * @param {ChangeDetectorRef} changeDetectorRef
+   * @param {ValidatorService} validatorService
    * @memberof FormElementComponent
    */
   constructor(
@@ -66,8 +66,8 @@ export class FormElementComponent extends FormElementClass implements DoCheck, O
   }
 
   /**
-   * applyChanges
    * @param {*} changes
+   * @param {boolean} assign
    * @memberof FormElementComponent
    */
   applyChanges(changes: any, assign: boolean): void {
