@@ -1,6 +1,17 @@
 <img src="http://ngx-form.wwwdev.io/color_logo_transparent_background.png" alt="ngx-form logo" title="ngx-form" align="right" width="128" />
 
 # @ngx-form/element
+
+[![npm version](https://badge.fury.io/js/%40ngx-form%2Felement.svg)](https://badge.fury.io/js/%40ngx-form%2Felement)
+[![GitHub version](https://badge.fury.io/gh/ngx-form%2Felement.svg)](https://badge.fury.io/gh/ngx-form%2Felement)
+[![Package Quality](http://npm.packagequality.com/shield/ngx-form.svg)](http://packagequality.com/#?package=ngx-form)
+[![Known Vulnerabilities](https://snyk.io/test/npm/@ngx-form/element/badge.svg)](https://snyk.io/test/npm/@ngx-form/element)
+[![Semver](http://img.shields.io/SemVer/2.0.0.png)](http://semver.org/spec/v2.0.0.html)
+[![GitHub issues](https://img.shields.io/github/issues/ngx-form/element.svg)](https://github.com/ngx-form/element/issues)
+[![GitHub forks](https://img.shields.io/github/forks/ngx-form/element.svg)](https://github.com/ngx-form/element/network)
+[![GitHub stars](https://img.shields.io/github/stars/ngx-form/element.svg)](https://github.com/ngx-form/element/stargazers)
+[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/ngx-form/element/master/LICENSE)
+
 Angular 2+ component to dynamically create html form element using data attribute with previously configured component with element name
 
 ** **Work in progress** **
@@ -10,26 +21,22 @@ Angular 2+ component to dynamically create html form element using data attribut
 * [Installation](#installation)
 * [Usage](#usage)
 * [Versioning](#versioning)
-* [Git commit](#git-commit)
+* Git
+  * [Commit](#commit)
+  * [Versioning](#versioning)
 * [License](#license)
 * [Donate](#donate)
 
 
 ## Demo
 
-Usage demonstration of a @ngx-form/element package coming soon
+[Click to preview demo](http://ngx-form.wwwdev.io)
 
 ## Installation
 
 To install, run:
 
 ```bash
-// dependency packages
-npm install --save @ngx-core/common @ngx-form/interface @ngx-form/type
-```
-
-```bash
-// primary package
 npm install --save @ngx-form/element
 ```
 
@@ -73,7 +80,13 @@ import { SelectComponent } from './select.component';
 export class ExampleModule { }
 ```
 
-## Versioning
+## GIT
+
+### Commit
+- AngularJS Git Commit Message Conventions https://gist.github.com/stephenparish/9941e89d80e2bc58a153
+- http://karma-runner.github.io/0.10/dev/git-commit-msg.html
+
+### Versioning
 Semantic Versioning 2.0.0 http://semver.org/
 
 **Given a version number MAJOR.MINOR.PATCH, increment the:**   
@@ -89,10 +102,6 @@ How should I deal with revisions in the 0.y.z initial development phase?
 How do I know when to release 1.0.0?
 
 >If your software is being used in production, it should probably already be 1.0.0. If you have a stable API on which users have come to depend, you should be 1.0.0. If you’re worrying a lot about backwards compatibility, you should probably already be 1.0.0.
-
-## GIT commit
-- AngularJS Git Commit Message Conventions https://gist.github.com/stephenparish/9941e89d80e2bc58a153
-- http://karma-runner.github.io/0.10/dev/git-commit-msg.html
 
 ## License
 
