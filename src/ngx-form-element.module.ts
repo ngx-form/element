@@ -5,8 +5,7 @@ import { CommonModule } from '@angular/common';
 
 // internal
 import { FormElementComponent } from './ngx-form-element.component';
-import { FormElementService } from './ngx-form-element.service';
-import { FormElementConfig } from './ngx-form-element.service';
+import { FormElementConfig, FormElementService } from './ngx-form-element.service';
 import { ValidatorService } from './ngx-form-element-validator.service';
 
 /**
