@@ -12,7 +12,7 @@
 [![GitHub stars](https://img.shields.io/github/stars/ngx-form/element.svg)](https://github.com/ngx-form/element/stargazers)
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/ngx-form/element/master/LICENSE)
 
-Angular 2+ component to dynamically create html form element using data attribute with previously configured component with element name
+Angular 2+ module to dynamically create previously configured html form element using `config` attribute.
 
 ## Table of contents
 * [Demo](#demo)
