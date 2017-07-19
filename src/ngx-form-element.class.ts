@@ -67,6 +67,7 @@ export abstract class FormElementClass extends DynamicComponentClass {
   set element(e: element) {
     this._element = e;
     this.elementComponent = this.formElementService.find(e);
+    /*
     if (!this.elementComponent) {
       throw new Error(`
         You need to define config for example as below:
@@ -84,6 +85,7 @@ export abstract class FormElementClass extends DynamicComponentClass {
           }),
       `);
     }
+    */
   }
   get element() {
     return this._element;
