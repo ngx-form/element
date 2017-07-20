@@ -15,7 +15,7 @@
 Angular 2+ module to dynamically create previously configured html form element using `config` attribute.
 
 ## Table of contents
-* [Demo](#demo)
+* [Documentation site](#documentation)
 * [Installation](#installation)
 * [Usage](#usage)
 * [Style guide](#style-guide)
@@ -26,9 +26,9 @@ Angular 2+ module to dynamically create previously configured html form element 
 * [Donate](#donate)
 
 
-## Demo
+## Documentation
 
-[Click to preview demo](http://ngx-form.wwwdev.io)
+[http://ngx-form.wwwdev.io](http://ngx-form.wwwdev.io)
 
 ## Installation
 
