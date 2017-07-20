@@ -1,5 +1,5 @@
 // external
-import { Injectable, Optional } from '@angular/core';
+import { Inject, Injectable, Optional } from '@angular/core';
 
 // internal
 import { component } from '@ngx-core/common';
@@ -12,6 +12,7 @@ import { FormElementConfigInterface, ConfigElementInterface } from '@ngx-form/in
  * @class FormElementConfig
  * @implements {FormElementConfigInterface}
  */
+@Injectable()
 export class FormElementConfig implements FormElementConfigInterface {
   elements: Array<ConfigElementInterface>;
   errorMessages?: {};
@@ -24,25 +25,13 @@ export class FormElementConfig implements FormElementConfigInterface {
  */
 @Injectable()
 export class FormElementService {
-  private _config: FormElementConfig;
-  set config(config: FormElementConfig) {
-    this._config = config;
-  }
-  get config(): FormElementConfig {
-    return this._config;
-  }
 
   /**
    * Creates an instance of FormElementService.
    * @param {FormElementConfig} config
    * @memberof FormElementService
    */
-  constructor( @Optional() config: FormElementConfig) {
-    if (config) {
-      this.config = config;
-    }
-    return this;
-  }
+  constructor(private formElementConfig: FormElementConfig) {}
 
   /**
    * Search element `name` in config `elements` and return component assigned to it.
@@ -52,11 +41,15 @@ export class FormElementService {
   find(e: element): null | any {
     let t: component | null = null;
     if (e) {
-      if (this.config) {
-        if (this.config.elements instanceof Array && this.config.elements.length > 0) {
-          this.config.elements.forEach((value, index) => {
-            if (value['name'] === e) {
-              t = value.component;
+      if (this.formElementConfig) {
+        if (this.formElementConfig instanceof Array) {
+          this.formElementConfig.forEach((provider) => {
+            if (provider !== undefined) {
+              provider.elements.forEach((value: any) => {
+                if (value['name'] === e) {
+                  t = value.component;
+                }
+              });
             }
           });
         }
