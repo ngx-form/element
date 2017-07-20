@@ -18,7 +18,7 @@ Angular 2+ module to dynamically create previously configured html form element 
 * [Demo](#demo)
 * [Installation](#installation)
 * [Usage](#usage)
-* [Versioning](#versioning)
+* [Style guide](#style-guide)
 * Git
   * [Commit](#commit)
   * [Versioning](#versioning)
@@ -78,11 +78,15 @@ import { SelectComponent } from './select.component';
 export class ExampleModule { }
 ```
 
+## Style guide
+
+[Angular style guide](https://angular.io/docs/ts/latest/guide/style-guide.html)   
+
 ## GIT
 
 ### Commit
-- AngularJS Git Commit Message Conventions https://gist.github.com/stephenparish/9941e89d80e2bc58a153
-- http://karma-runner.github.io/0.10/dev/git-commit-msg.html
+- [AngularJS Git Commit Message Conventions](https://gist.github.com/stephenparish/9941e89d80e2bc58a153)
+- [Karma git commit](http://karma-runner.github.io/0.10/dev/git-commit-msg.html)
 
 ### Versioning
 Semantic Versioning 2.0.0 http://semver.org/
