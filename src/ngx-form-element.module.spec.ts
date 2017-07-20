@@ -10,7 +10,7 @@ import { FormElementModule } from './ngx-form-element.module';
 import { FormElementService } from './ngx-form-element.service';
 import { ValidatorService } from './ngx-form-element-validator.service';
 
-import { TestFormElementModule } from './ngx-form-element.module.test';
+import { TestHolderFormElementModule } from './ngx-form-element.module.test';
 import { config } from './../test/config';
 import { model } from './../test/model';
 
@@ -29,7 +29,7 @@ describe('FormElementModule', () => {
     TestBed.configureTestingModule({
       imports: [
         ReactiveFormsModule,
-        TestFormElementModule
+        TestHolderFormElementModule
       ],
     }).compileComponents();
   }));
@@ -55,10 +55,6 @@ describe('FormElementModule', () => {
         expect(comp[property]).toEqual(config[0][property]);
       }
     }
-  }));
-  it('should have property `elementComponent` defined', async(() => {
-    comp.element = config.element;
-    expect(comp.elementComponent).toBeDefined();
   }));
   it('should have properties defined in property `__component` instance', async(() => {
     comp.config = config;
