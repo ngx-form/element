@@ -1,5 +1,5 @@
 // external
-import { Inject, ModuleWithProviders, NgModule, Optional } from '@angular/core';
+import { forwardRef, Inject, ModuleWithProviders, NgModule, Optional } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
@@ -29,19 +29,14 @@ export class FormElementModule {
    * @returns {ModuleWithProviders}
    * @memberof FormElementModule
    */
-  static forRoot( @Optional() @Inject(FormElementConfig) config?: FormElementConfig): ModuleWithProviders {
+  static forRoot(@Optional() @Inject(FormElementConfig) config?: FormElementConfig): ModuleWithProviders {
     return {
       ngModule: FormElementModule,
-      providers: (config) ?
-        [
-          FormElementService,
-          ValidatorService,
-          { provide: FormElementConfig, useValue: config }
-        ] :
-        [
-          FormElementService,
-          ValidatorService
-        ]
+      providers: [
+        FormElementService,
+        ValidatorService,
+        {provide: FormElementConfig, useValue: config, multi: true}
+      ]
     }
   }
 
@@ -50,9 +45,12 @@ export class FormElementModule {
    * @returns
    * @memberof FormElementModule
    */
-  static forChild() {
+  static forChild(config: FormElementConfig): ModuleWithProviders {
     return {
-      ngModule: FormElementModule
+      ngModule: FormElementModule,
+      providers: [
+        {provide: FormElementConfig, useValue: config, multi: true}
+      ]
     };
   }
 }
