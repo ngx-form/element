@@ -58,45 +58,6 @@ export abstract class FormElementClass extends DynamicComponentClass {
   @Input('model') model: Object;
 
   /**
-   * HTML Form Element of component name like for example 'checkbox' 'input' in config to dynamic create.
-   * Important thing the same time you set property `elementComponent` will be set to just founded component from `FormElementService`
-   * @type {element}
-   * @memberof FormElementClass
-   */
-  _element: element;
-  set element(e: element) {
-    this._element = e;
-    this.elementComponent = this.formElementService.find(e);
-    /*
-    if (!this.elementComponent) {
-      throw new Error(`
-        You need to define config for example as below:
-        FormElementModule.forRoot({
-            elements: [
-              {
-                name: 'input',
-                component: YourInputComponent
-              },
-              {
-                name: 'select',
-                component: YourSelectComponent
-              }
-            ]
-          }),
-      `);
-    }
-    */
-  }
-  get element() {
-    return this._element;
-  }
-
-  /**
-   * property is assigned when element is found in FormElementService
-   */
-  elementComponent: component;
-
-  /**
    * @type {formGroupName}
    * @memberof FormElementClass
   _formGroupName: string;
@@ -140,9 +101,9 @@ export abstract class FormElementClass extends DynamicComponentClass {
    * @memberof FormElementClass
    */
   public create(): void {
-    this.element = this.config.element;
-    if (this.elementComponent) {
-      this.__create(this.elementComponent);
+    const createElement = this.formElementService.find(this.config.element);
+    if (createElement) {
+      this.__create(createElement);
       this.removed = false;
       // add formGroup if not exists
       if (!this.formGroup) {
@@ -180,7 +141,15 @@ export abstract class FormElementClass extends DynamicComponentClass {
         this.formControl().valueChanges.subscribe(model => this.updateValueAndValidity());
       }
     } else {
-      throw new Error('Provide property element.');
+      throw new Error(`
+        You need to define FormElementConfig for example as below:
+        FormElementModule.forRoot({
+            elements: [
+              { name: 'input', component: YourInputComponent },
+              { name: 'select', component: YourSelectComponent }
+            ]
+          }),
+      `);
     }
   }
 
