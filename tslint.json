@@ -97,8 +97,8 @@
       "check-type"
     ],
 
-    "directive-selector": [true, "attribute", "form-element", "camelCase"],
-    "component-selector": [true, "element", "form-element", "kebab-case"],
+    "directive-selector": [true, "attribute", "ngx-form", "camelCase"],
+    "component-selector": [true, "element", "ngx-form", "kebab-case"],
     "use-input-property-decorator": true,
     "use-output-property-decorator": true,
     "use-host-property-decorator": true,

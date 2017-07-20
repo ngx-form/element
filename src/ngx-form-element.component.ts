@@ -30,12 +30,13 @@ import template from './ngx-form-element.component.html';
  * @implements {OnInit}
  */
 @Component({
-  selector: 'form-element',
+  selector: 'ngx-form-element',
   template: '<div #container></div>'
 })
 export class FormElementComponent extends FormElementClass implements DoCheck, OnInit {
   differ = {};
   step = 0;
+
   /**
    * Creates an instance of FormElementComponent.
    * @param {ComponentFactoryResolver} componentFactoryResolver
