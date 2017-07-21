@@ -7,7 +7,9 @@ import { TestBed, async, inject, ComponentFixture } from '@angular/core/testing'
 // internal
 import { FormElementComponent } from './ngx-form-element.component';
 import { FormElementService } from './ngx-form-element.service';
+import { FormElementModule } from './ngx-form-element.module';
 import { ValidatorService } from './ngx-form-element-validator.service';
+import { InputComponent } from './../test/input.component';
 
 beforeAll(() => {
   TestBed.resetTestEnvironment();
@@ -23,10 +25,13 @@ describe('FormElementComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
+        FormElementModule.forRoot({
+          elements: [
+            { name: 'input', component: InputComponent }
+          ],
+          errorMessages: { }
+        }),
         ReactiveFormsModule
-      ],
-      declarations: [
-        FormElementComponent
       ],
       providers: [
         FormElementService,
