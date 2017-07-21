@@ -112,7 +112,7 @@ export abstract class FormElementClass extends DynamicComponentClass {
       this.__assign<Object>('model', this.model);
       this.__assign<FormGroup>('formGroup', this.formGroup);
       this.formGroup.controls[this.config.key] = new FormControl();
-      this.validatorService.formControl = this.formGroup.controls[this.config.key];
+      this.validatorServiceFormControl();
 
       // assign config to __component instance
       if (this.config) {
@@ -134,11 +134,11 @@ export abstract class FormElementClass extends DynamicComponentClass {
         this.__subscribe('changed', this.onChanged);
         this.__subscribe('submitted', this.onSubmitted);
 
-        this.created.emit(true);
-        this.destroyed.emit(false);
-
         // subscribe to valueChanges in formGroup
         this.formControl().valueChanges.subscribe(model => this.updateValueAndValidity());
+
+        this.created.emit(true);
+        this.destroyed.emit(false);
       }
     } else {
       throw new Error(`
@@ -218,12 +218,12 @@ export abstract class FormElementClass extends DynamicComponentClass {
       this.__destroy();
       this.removed = true;
 
+      // remove form control
+      this.removeFormControl();
+
       // emit created and destroyed
       this.created.emit(false);
       this.destroyed.emit(true);
-
-      // remove form control
-      this.removeFormControl();
     }
   }
 
@@ -256,5 +256,12 @@ export abstract class FormElementClass extends DynamicComponentClass {
     setTimeout(() => {
       this.formGroup.updateValueAndValidity();
     });
+  }
+
+  /**
+   * @memberof FormElementClass
+   */
+  validatorServiceFormControl(): void {
+    this.validatorService.formControl = this.formGroup.controls[this.config.key];
   }
 }

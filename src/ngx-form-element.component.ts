@@ -86,6 +86,7 @@ export class FormElementComponent extends FormElementClass implements DoCheck, O
           }
           break;
       }
+      this.validatorServiceFormControl();
       this.validatorService.patchValidators(record.key, record.currentValue);
       if (assign === true) {
         this.__assign<any>(record.key, record.currentValue);
