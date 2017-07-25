@@ -2,11 +2,11 @@
 import { forwardRef, Inject, ModuleWithProviders, NgModule, Optional } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { MaterialModule } from '@angular/material';
 
 // internal
 import { FormElementComponent } from './ngx-form-element.component';
 import { FormElementConfig, FormElementService } from './ngx-form-element.service';
-import { ValidatorService } from './ngx-form-element-validator.service';
 
 /**
  * To dynamic create HTML Form Elements.
@@ -16,10 +16,15 @@ import { ValidatorService } from './ngx-form-element-validator.service';
 @NgModule({
   imports: [
     CommonModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MaterialModule
   ],
-  declarations: [ FormElementComponent ],
-  exports: [ FormElementComponent ]
+  declarations: [
+    FormElementComponent
+  ],
+  exports: [
+    FormElementComponent
+  ]
 })
 export class FormElementModule {
   /**
@@ -34,7 +39,6 @@ export class FormElementModule {
       ngModule: FormElementModule,
       providers: [
         FormElementService,
-        ValidatorService,
         {provide: FormElementConfig, useValue: config, multi: true}
       ]
     }
