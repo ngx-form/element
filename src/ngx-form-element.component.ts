@@ -1,5 +1,7 @@
 // externals
 import {
+  AfterViewChecked,
+  AfterViewInit,
   ChangeDetectorRef,
   Component,
   ComponentFactoryResolver,
@@ -8,20 +10,21 @@ import {
   Inject,
   KeyValueDiffers,
   KeyValueChangeRecord,
+  OnDestroy,
   OnInit
 } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
+import { Subscription } from 'rxjs/Subscription';
 
 import * as _ from 'lodash-es';
 
+import { ErrorService } from './error.service';
 import { FormElementClass } from './ngx-form-element.class';
 import { FormElementService } from './ngx-form-element.service';
-import { ValidatorService } from './ngx-form-element-validator.service';
+import { ValidatorService } from './validator.service';
 
-/*
-  TODO: cannot use template because of error in @ngx-form/material
-*/
 import template from './ngx-form-element.component.html';
+
 /**
  * Dynamic create HTML Form Elements
  * @export
@@ -30,11 +33,19 @@ import template from './ngx-form-element.component.html';
  * @implements {OnInit}
  */
 @Component({
+  moduleId: module.id,
   selector: 'ngx-form-element',
-  template: '<div #container></div>'
+  template,
+  providers: [
+    ErrorService,
+    ValidatorService
+  ]
 })
-export class FormElementComponent extends FormElementClass implements DoCheck, OnInit {
+export class FormElementComponent extends FormElementClass implements AfterViewChecked, AfterViewInit, DoCheck, OnDestroy, OnInit {
   differ = {};
+  private subscription: {
+    errors?: Subscription
+  } = { };
   step = 0;
 
   /**
@@ -50,20 +61,25 @@ export class FormElementComponent extends FormElementClass implements DoCheck, O
   constructor(
     componentFactoryResolver: ComponentFactoryResolver,
     protected formBuilder: FormBuilder,
-    protected formElementService: FormElementService, // @Inject(forwardRef(() => FormElementService)) 
+    protected formElementService: FormElementService, // @Inject(forwardRef(() => FormElementService))
     private keyValueDiffers: KeyValueDiffers,
     private changeDetectorRef: ChangeDetectorRef,
-    protected validatorService: ValidatorService // @Inject(forwardRef(() => ValidatorService))
+    protected validatorService: ValidatorService, // @Inject(forwardRef(() => ValidatorService))
+    protected errorService: ErrorService
   ) {
     super(
       componentFactoryResolver,
       formBuilder,
       formElementService,
-      validatorService
+      validatorService,
+      errorService
     );
     // KeyValueDiffers
     this.differ['config'] = this.keyValueDiffers.find({}).create();
     this.differ['attributes'] = this.keyValueDiffers.find({}).create();
+    this.subscription.errors = this.errorService.errors.subscribe((error) => {
+      this.__assign('error', error);
+    });
   }
 
   /**
@@ -86,7 +102,6 @@ export class FormElementComponent extends FormElementClass implements DoCheck, O
           }
           break;
       }
-      this.validatorServiceFormControl();
       this.validatorService.patchValidators(record.key, record.currentValue);
       if (assign === true) {
         this.__assign<any>(record.key, record.currentValue);
@@ -94,6 +109,13 @@ export class FormElementComponent extends FormElementClass implements DoCheck, O
     });
     // removed
     changes.forEachRemovedItem((record: KeyValueChangeRecord<string, any>) => null);
+  }
+
+  ngAfterViewChecked() {
+    // this.changeDetectorRef.detectChanges();
+  }
+
+  ngAfterViewInit() {
   }
 
   /**
@@ -111,6 +133,13 @@ export class FormElementComponent extends FormElementClass implements DoCheck, O
     changes = this.differ['attributes'].diff(this.config['attributes']);
     if (changes) {
       this.applyChanges(changes, false);
+    }
+    this.errorService.check();
+  }
+
+  ngOnDestroy() {
+    if (this.subscription.errors) {
+      this.subscription.errors.unsubscribe();
     }
   }
 
