@@ -23,8 +23,9 @@ import { FormElementInterface } from '@ngx-form/interface';
 import { element } from '@ngx-form/type';
 
 // internal
+import { ErrorService } from './error.service';
 import { FormElementService } from './ngx-form-element.service';
-import { ValidatorService } from './ngx-form-element-validator.service';
+import { ValidatorService } from './validator.service';
 
 /**
  * @export
@@ -91,7 +92,8 @@ export abstract class FormElementClass extends DynamicComponentClass {
     componentFactoryResolver: ComponentFactoryResolver,
     protected formBuilder: FormBuilder,
     protected formElementService: FormElementService, // @Inject(forwardRef(() => FormElementService))
-    protected validatorService: ValidatorService // @Inject(forwardRef(() => ValidatorService))
+    protected validatorService: ValidatorService, // @Inject(forwardRef(() => ValidatorService))
+    protected errorService: ErrorService
   ) {
     super(componentFactoryResolver);
   }
@@ -112,23 +114,24 @@ export abstract class FormElementClass extends DynamicComponentClass {
       this.__assign<Object>('model', this.model);
       this.__assign<FormGroup>('formGroup', this.formGroup);
       this.formGroup.controls[this.config.key] = new FormControl();
-      this.validatorServiceFormControl();
+      this.formControl().markAsTouched();
+      this.validatorService.setFormControl(this.formControl());
+      this.errorService.setFormControl(this.formControl());
 
       // assign config to __component instance
       if (this.config) {
-        Object.keys(this.config).forEach((key, index) => {
-          if (this.config[key] instanceof Object) {
-            Object.keys(this.config[key]).forEach(subkey => {
-              this.validatorService.patchValidators(subkey, this.config[key][subkey]);
+        Object.keys(this.config).forEach((prop, index) => {
+          this.validatorService.patchValidators(prop, this.config[prop]);
+
+          if (this.config[prop] instanceof Object) {
+            Object.keys(this.config[prop]).forEach(subprop => {
+              this.validatorService.patchValidators(subprop, this.config[prop][subprop]);
             });
           }
+
+          // assign to created __component instance
+          this.__assign(prop, this.config[prop]);
         })
-        for (const prop in this.config) {
-          if (prop) {
-            this.validatorService.patchValidators(prop, this.config[prop]);
-            this.__assign(prop, this.config[prop]);
-          }
-        }
 
         this.__subscribe('cancelled', this.onCancelled);
         this.__subscribe('changed', this.onChanged);
@@ -136,6 +139,7 @@ export abstract class FormElementClass extends DynamicComponentClass {
 
         // subscribe to valueChanges in formGroup
         this.formControl().valueChanges.subscribe(model => this.updateValueAndValidity());
+        // this.formControl().statusChanges.subscribe(() => { });
 
         this.created.emit(true);
         this.destroyed.emit(false);
@@ -228,7 +232,7 @@ export abstract class FormElementClass extends DynamicComponentClass {
   }
 
   /**
-   * Remove formGroup control with timeout
+   * Remove formGroup control using formGroup.removeControl with setTimeout
    * @memberof FormElementClass
    */
   removeFormControl() {
@@ -238,6 +242,7 @@ export abstract class FormElementClass extends DynamicComponentClass {
   }
 
   /**
+   * Subscribe to `__component` instance specific `property` name.
    * @param {string} property
    * @param {*} [callback]
    * @param {*} [error]
@@ -249,19 +254,12 @@ export abstract class FormElementClass extends DynamicComponentClass {
   }
 
   /**
-   * formGroup updateValueAndValidity with timeout
+   * formGroup updateValueAndValidity with setTimeout
    * @memberof FormElementClass
    */
   updateValueAndValidity() {
     setTimeout(() => {
       this.formGroup.updateValueAndValidity();
     });
-  }
-
-  /**
-   * @memberof FormElementClass
-   */
-  validatorServiceFormControl(): void {
-    this.validatorService.formControl = this.formGroup.controls[this.config.key];
   }
 }
