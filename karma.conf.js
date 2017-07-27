@@ -1,6 +1,7 @@
 // Karma configuration
 // Generated on Mon Mar 20 2017 15:06:42 GMT+0100 (CET)
 
+const angular = require('rollup-plugin-angular');
 const commonjs = require('rollup-plugin-commonjs');
 const html = require('rollup-plugin-html');
 const nodeResolve = require('rollup-plugin-node-resolve');
@@ -20,7 +21,6 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      'test/index.ts',
       'test/*.ts',
       'src/*.spec.ts'
     ],
@@ -40,9 +40,8 @@ module.exports = function(config) {
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
-      'test/index.ts': ['rollup'],
       'test/*.ts': ['rollup'],
-      'src/*.spec.ts': ['rollup']
+      'src/*.spec.ts': ['rollup'],
     },
 
     rollupPreprocessor: {
@@ -53,11 +52,8 @@ module.exports = function(config) {
       sourceMap: false,
       // rollup settings. See Rollup documentation
       plugins: [
-        commonjs({
-          namedExports: {
-            'node_modules/rxjs/**': ['named']
-          }
-        }),
+        angular(),
+        commonjs(),
         html({
           include: '**/*.html',
           htmlMinifierOptions: {
@@ -75,19 +71,19 @@ module.exports = function(config) {
 
           // use "jsnext:main" if possible
           // – see https://github.com/rollup/rollup/wiki/jsnext:main
-          jsnext: false,  // Default: false
+          jsnext: true,  // Default: false
 
           // use "main" field or index.js, even if it's not an ES6 module
           // (needs to be converted from CommonJS to ES6
           // – see https://github.com/rollup/rollup-plugin-commonjs
           main: true,  // Default: true
 
-          extensions: [ '.js', '.json', 'html']
+          extensions: [ '.js', '.json', '.ts' ]
         }),
         typescript({
           typescript: require('./node_modules/typescript')
         })
-      ],
+      ]
     },
 
     // test results reporter to use
