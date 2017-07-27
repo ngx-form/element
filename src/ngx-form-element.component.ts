@@ -1,4 +1,4 @@
-// externals
+// external
 import {
   AfterViewChecked,
   AfterViewInit,
@@ -16,12 +16,16 @@ import {
 import { FormBuilder } from '@angular/forms';
 import { Subscription } from 'rxjs/Subscription';
 
-import * as _ from 'lodash-es';
-
+// internal
 import { ErrorService } from './error.service';
 import { FormElementClass } from './ngx-form-element.class';
 import { FormElementService } from './ngx-form-element.service';
 import { ValidatorService } from './validator.service';
+
+// interface
+export interface SubscriptionInterface {
+  errors?: Subscription;
+}
 
 import template from './ngx-form-element.component.html';
 
@@ -42,11 +46,10 @@ import template from './ngx-form-element.component.html';
   ]
 })
 export class FormElementComponent extends FormElementClass implements AfterViewChecked, AfterViewInit, DoCheck, OnDestroy, OnInit {
-  differ = {};
-  private subscription: {
-    errors?: Subscription
-  } = { };
   step = 0;
+
+  private differ = {};
+  private subscription: SubscriptionInterface = { };
 
   /**
    * Creates an instance of FormElementComponent.
@@ -56,10 +59,11 @@ export class FormElementComponent extends FormElementClass implements AfterViewC
    * @param {KeyValueDiffers} keyValueDiffers
    * @param {ChangeDetectorRef} changeDetectorRef
    * @param {ValidatorService} validatorService
+   * @param {ErrorService} errorService
    * @memberof FormElementComponent
    */
   constructor(
-    componentFactoryResolver: ComponentFactoryResolver,
+    public componentFactoryResolver: ComponentFactoryResolver,
     protected formBuilder: FormBuilder,
     protected formElementService: FormElementService, // @Inject(forwardRef(() => FormElementService))
     private keyValueDiffers: KeyValueDiffers,
@@ -75,14 +79,14 @@ export class FormElementComponent extends FormElementClass implements AfterViewC
       errorService
     );
     // KeyValueDiffers
-    this.differ['config'] = this.keyValueDiffers.find({}).create();
-    this.differ['attributes'] = this.keyValueDiffers.find({}).create();
-    this.subscription.errors = this.errorService.errors.subscribe((error) => {
-      this.__assign('error', error);
-    });
+    this.differ = {
+      config: this.keyValueDiffers.find({}).create(),
+      attributes: this.keyValueDiffers.find({}).create()
+    };
   }
 
   /**
+   * Detect changes with differ and assign to `__component` instance, patchValidators and also create or remove instance.
    * @param {*} changes
    * @param {boolean} assign
    * @memberof FormElementComponent
@@ -108,18 +112,18 @@ export class FormElementComponent extends FormElementClass implements AfterViewC
       }
     });
     // removed
-    changes.forEachRemovedItem((record: KeyValueChangeRecord<string, any>) => null);
+    changes.forEachRemovedItem((record: KeyValueChangeRecord<string, any>) => {
+      console.log(`forEachRemovedItem`, record.key, record.currentValue);
+    });
   }
 
-  ngAfterViewChecked() {
-    // this.changeDetectorRef.detectChanges();
-  }
+  ngAfterViewChecked() { }
 
-  ngAfterViewInit() {
-  }
+  ngAfterViewInit() { }
 
   /**
-   * Changes to `this.config` with apply
+   * Detect changes on `config` and `config.attributes` property and if any exists, use applyChanges method.
+   * Check errors in formControl with errorService.
    * @memberof FormElementComponent
    */
   ngDoCheck() {
@@ -137,6 +141,10 @@ export class FormElementComponent extends FormElementClass implements AfterViewC
     this.errorService.check();
   }
 
+  /**
+   * On destroy remove subscriptions.
+   * @memberof FormElementComponent
+   */
   ngOnDestroy() {
     if (this.subscription.errors) {
       this.subscription.errors.unsubscribe();
@@ -149,5 +157,17 @@ export class FormElementComponent extends FormElementClass implements AfterViewC
    */
   ngOnInit() {
     this.create();
+  }
+
+
+  /**
+   * Subscribe to errorService `errors` property to get formControl errors.
+   * @private
+   * @memberof FormElementComponent
+   */
+  private subscribeToErrors() {
+    this.subscription.errors = this.errorService.errors.subscribe((error) => {
+      this.__assign('error', error);
+    });
   }
 }
