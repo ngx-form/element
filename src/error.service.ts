@@ -1,28 +1,34 @@
+// external
 import { Injectable } from '@angular/core';
 import { AbstractControl } from '@angular/forms';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
 
+// internal
 import { availableValidators } from './available-validators.shared';
 
+// interface
 export interface ErrorSourceInterface {
-  message: {
-    [index: string]: string
-  },
+  message: string,
   originalError: any
 }
 
+/**
+ * ErrorService to get formControl errors and transform to specific error message.
+ * @export
+ * @class ErrorService
+ */
 @Injectable()
 export class ErrorService {
   private availableValidators: Array<string> = availableValidators;
   private errorSource: Subject<ErrorSourceInterface> = new Subject<ErrorSourceInterface>();
 
   /**
-   * asObservable - subscribe to errorSource
+   * Subscribe to errorSource asObservable.
    * @type {*}
    * @memberof ErrorService
    */
-  public errors: Observable<any>;
+  public errors: Observable<ErrorSourceInterface>;
 
   // private
   private error: ErrorSourceInterface;
@@ -32,7 +38,10 @@ export class ErrorService {
     this.errors = this.errorSource.asObservable();
   }
 
-  check() {
+  /**
+   * @memberof ErrorService
+   */
+  public check(): void {
     if (this.formControl['errors']) {
       this.availableValidators.forEach((validator, index) => {
         if (this.formControl.hasError(validator)) {
