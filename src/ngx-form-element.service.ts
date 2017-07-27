@@ -1,5 +1,5 @@
 // external
-import { Inject, Injectable, Optional } from '@angular/core';
+import { Injectable } from '@angular/core';
 
 // internal
 import { component } from '@ngx-core/common';
@@ -34,11 +34,11 @@ export class FormElementService {
   constructor(private formElementConfig: FormElementConfig) {}
 
   /**
-   * Search element `name` in config `elements` and return component assigned to it.
+   * Find element by `name` in config `elements` and return component assigned to it.
    * @param {e} element name of html element for example 'input'
    * @returns {null | any}
    */
-  find(e: element): null | any {
+  public find(e: element): null | any {
     let t: component | null = null;
     if (e) {
       if (this.formElementConfig) {
