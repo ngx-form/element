@@ -16,7 +16,7 @@ import {
   FormGroup,
   Validators
 } from '@angular/forms';
-import * as _ from 'lodash-es';
+// import * as _ from 'lodash-es';
 
 /* TODO: remove when test in karma ... */
 import { FormElementInterface } from '@ngx-form/interface';
