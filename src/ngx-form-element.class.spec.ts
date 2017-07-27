@@ -1,12 +1,14 @@
 // external
-import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { BrowserDynamicTestingModule, platformBrowserDynamicTesting } from '@angular/platform-browser-dynamic/testing';
 import { TestBed, async, inject, ComponentFixture } from '@angular/core/testing';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { FormElementTestComponent } from './ngx-form-element.class.test';
 import { FormElementService } from './ngx-form-element.service';
-import { ValidatorService } from './ngx-form-element-validator.service';
+import { FormElementModule } from './ngx-form-element.module';
+import { ValidatorService } from './validator.service';
+import { ErrorService } from './error.service';
+import { InputComponent } from './../test/input.component';
 
 beforeAll(() => {
   TestBed.resetTestEnvironment();
@@ -22,12 +24,20 @@ describe('FormElementComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
+        FormElementModule.forRoot({
+          elements: [
+            { name: 'input', component: InputComponent }
+          ],
+          errorMessages: { }
+        }),
+        FormsModule,
         ReactiveFormsModule
       ],
       declarations: [
         FormElementTestComponent
       ],
       providers: [
+        ErrorService,
         FormElementService,
         ValidatorService
       ]

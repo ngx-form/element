@@ -10,7 +10,8 @@ import { FormBuilder } from '@angular/forms';
 
 import { FormElementClass } from './../src/ngx-form-element.class';
 import { FormElementService } from './../src/ngx-form-element.service';
-import { ValidatorService } from './ngx-form-element-validator.service';
+import { ValidatorService } from './validator.service';
+import { ErrorService } from './error.service';
 
 @Component({
   selector: 'form-element-test-component',
@@ -22,13 +23,15 @@ export class FormElementTestComponent extends FormElementClass implements OnInit
     componentFactoryResolver: ComponentFactoryResolver,
     protected formBuilder: FormBuilder,
     protected formElementService: FormElementService, // @Inject(forwardRef(() => FormElementService))
-    protected validatorService: ValidatorService // @Inject(forwardRef(() => ValidatorService))
+    protected validatorService: ValidatorService, // @Inject(forwardRef(() => ValidatorService))
+    protected errorService: ErrorService
   ) {
     super(
       componentFactoryResolver,
       formBuilder,
       formElementService,
-      validatorService
+      validatorService,
+      errorService
     );
   }
 
