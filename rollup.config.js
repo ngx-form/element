@@ -1,4 +1,5 @@
 
+// import angular from 'rollup-plugin-angular';
 import commonjs from 'rollup-plugin-commonjs';
 import html from 'rollup-plugin-html';
 import nodeResolve from 'rollup-plugin-node-resolve';
@@ -15,11 +16,7 @@ export default {
   moduleName: '@ngx-form/element',
   onwarn,
   plugins: [
-    commonjs({
-      namedExports: {
-        'node_modules/rxjs/**': ['named']
-      }
-    }),
+    commonjs(),
     html({
       include: '**/*.html',
       htmlMinifierOptions: {
@@ -44,16 +41,13 @@ export default {
       // – see https://github.com/rollup/rollup-plugin-commonjs
       main: true,  // Default: true
 
-      extensions: [ '.js', '.json', 'html']
+      extensions: [ '.js', '.json' ]
     }),
     typescript({
       typescript: require('./node_modules/typescript')
     }),
     uglify({}, minify)
-  ],
-  globals: {
-    '@angular/core': 'ng.core'
-  }
+  ]
 };
 
 function onwarn(message) {
