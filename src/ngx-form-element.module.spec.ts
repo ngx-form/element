@@ -1,5 +1,4 @@
 // external
-import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
 import { BrowserDynamicTestingModule, platformBrowserDynamicTesting } from '@angular/platform-browser-dynamic/testing';
 import { TestBed, async, inject, ComponentFixture } from '@angular/core/testing';
@@ -8,7 +7,7 @@ import { TestBed, async, inject, ComponentFixture } from '@angular/core/testing'
 import { FormElementComponent } from './ngx-form-element.component';
 import { FormElementModule } from './ngx-form-element.module';
 import { FormElementService } from './ngx-form-element.service';
-import { ValidatorService } from './ngx-form-element-validator.service';
+import { ValidatorService } from './validator.service';
 
 import { TestHolderFormElementModule } from './ngx-form-element.module.test';
 import { config } from './../test/config';
@@ -28,6 +27,7 @@ describe('FormElementModule', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
+        FormsModule,
         ReactiveFormsModule,
         TestHolderFormElementModule
       ],

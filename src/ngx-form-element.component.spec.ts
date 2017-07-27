@@ -1,6 +1,4 @@
 // external
-import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
 import { BrowserDynamicTestingModule, platformBrowserDynamicTesting } from '@angular/platform-browser-dynamic/testing';
 import { TestBed, async, inject, ComponentFixture } from '@angular/core/testing';
 
@@ -8,14 +6,14 @@ import { TestBed, async, inject, ComponentFixture } from '@angular/core/testing'
 import { FormElementComponent } from './ngx-form-element.component';
 import { FormElementService } from './ngx-form-element.service';
 import { FormElementModule } from './ngx-form-element.module';
-import { ValidatorService } from './ngx-form-element-validator.service';
+import { ErrorService } from './error.service';
+import { ValidatorService } from './validator.service';
 import { InputComponent } from './../test/input.component';
 
 beforeAll(() => {
   TestBed.resetTestEnvironment();
   TestBed.initTestEnvironment(BrowserDynamicTestingModule, platformBrowserDynamicTesting());
 });
-
 describe('FormElementComponent', () => {
 
   let comp: FormElementComponent;
@@ -30,16 +28,15 @@ describe('FormElementComponent', () => {
             { name: 'input', component: InputComponent }
           ],
           errorMessages: { }
-        }),
-        ReactiveFormsModule
+        })
       ],
       providers: [
+        ErrorService,
         FormElementService,
         ValidatorService
       ]
     }).compileComponents();
   }));
-
   // synchronous beforeEach
   beforeEach(() => {
     fixture = TestBed.createComponent(FormElementComponent);
