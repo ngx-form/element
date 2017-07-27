@@ -1,6 +1,6 @@
 // external
-import { forwardRef, Inject, ModuleWithProviders, NgModule, Optional } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
+import { Inject, ModuleWithProviders, NgModule, Optional } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MaterialModule } from '@angular/material';
 
@@ -16,19 +16,16 @@ import { FormElementConfig, FormElementService } from './ngx-form-element.servic
 @NgModule({
   imports: [
     CommonModule,
+    FormsModule,
     ReactiveFormsModule,
     MaterialModule
   ],
-  declarations: [
-    FormElementComponent
-  ],
-  exports: [
-    FormElementComponent
-  ]
+  declarations: [ FormElementComponent ],
+  exports: [ FormElementComponent ]
 })
 export class FormElementModule {
   /**
-   * forRoot with param config to configure before html elements.
+   * forRoot with config parameter with all possible form elements to create.
    * @static
    * @param {FormElementConfig} config
    * @returns {ModuleWithProviders}
