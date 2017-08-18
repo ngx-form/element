@@ -3,9 +3,7 @@ import { Injectable } from '@angular/core';
 import { AbstractControl, Validators } from '@angular/forms';
 
 // internal
-import {
-  ValidatorsHolderInterface
-} from '@ngx-form/interface';
+import { ValidatorsHolderInterface } from '@ngx-form/interface';
 
 import { availableValidators } from './available-validators.shared';
 
