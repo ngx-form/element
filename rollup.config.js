@@ -1,28 +1,22 @@
 
-// import angular from 'rollup-plugin-angular';
+import angular from 'rollup-plugin-angular';
 import commonjs from 'rollup-plugin-commonjs';
-import html from 'rollup-plugin-html';
 import nodeResolve from 'rollup-plugin-node-resolve';
 import typescript from 'rollup-plugin-typescript';
 import uglify from 'rollup-plugin-uglify';
 import { minify } from 'uglify-es';
 
 export default {
-  entry: 'dist/index.js',
+  entry: 'src/index.ts',
   dest: 'dist/bundle.umd.js',
   exports: 'named',
-  sourceMap: false,
+  sourceMap: true,
   format: 'umd',
   moduleName: '@ngx-form/element',
   onwarn,
   plugins: [
+    angular(),
     commonjs(),
-    html({
-      include: '**/*.html',
-      htmlMinifierOptions: {
-        caseSensitive: true // need to do not lower letter
-      }
-    }),
     nodeResolve({
       // use "es2015" field for ES2015 modules with ES2015 code,
 	    // if possible
