@@ -52,9 +52,7 @@ module.exports = function(config) {
       // rollup settings. See Rollup documentation
       plugins: [
         angular(),
-        commonjs({
-          include: 'node_modules/**'
-        }),
+        commonjs(),
         nodeResolve({
           // use "es2015" field for ES2015 modules with ES2015 code,
           // if possible
