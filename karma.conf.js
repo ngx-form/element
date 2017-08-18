@@ -3,7 +3,6 @@
 
 const angular = require('rollup-plugin-angular');
 const commonjs = require('rollup-plugin-commonjs');
-const html = require('rollup-plugin-html');
 const nodeResolve = require('rollup-plugin-node-resolve');
 const typescript = require('rollup-plugin-typescript');
 
@@ -16,7 +15,7 @@ module.exports = function(config) {
 
     // frameworks to use
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-    frameworks: ['jasmine'],
+    frameworks: ['jasmine', 'karma-typescript'],
 
 
     // list of files / patterns to load in the browser
@@ -27,7 +26,7 @@ module.exports = function(config) {
 
 
     plugins: [
-      require('karma-chrome-launcher'),
+      require('karma-firefox-launcher'),
       require('karma-coverage'),
       require('karma-rollup-preprocessor'),
       require('karma-jasmine'),
@@ -53,12 +52,8 @@ module.exports = function(config) {
       // rollup settings. See Rollup documentation
       plugins: [
         angular(),
-        commonjs(),
-        html({
-          include: '**/*.html',
-          htmlMinifierOptions: {
-            caseSensitive: true // need to do not lower letter
-          }
+        commonjs({
+          include: 'node_modules/**'
         }),
         nodeResolve({
           // use "es2015" field for ES2015 modules with ES2015 code,
@@ -78,7 +73,7 @@ module.exports = function(config) {
           // – see https://github.com/rollup/rollup-plugin-commonjs
           main: true,  // Default: true
 
-          extensions: [ '.js', '.json', '.ts' ]
+          extensions: [ '.js', '.json' ]
         }),
         typescript({
           typescript: require('./node_modules/typescript')
@@ -114,12 +109,12 @@ module.exports = function(config) {
     
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: ['Chrome'],
+    browsers: ['Firefox'],
 
 
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits
-    singleRun: false,
+    singleRun: true,
 
     // Concurrency level
     // how many browser should be started simultaneous
