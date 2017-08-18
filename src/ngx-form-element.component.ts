@@ -27,8 +27,6 @@ export interface SubscriptionInterface {
   errors?: Subscription;
 }
 
-import template from './ngx-form-element.component.html';
-
 /**
  * Dynamic create HTML Form Elements
  * @export
@@ -37,9 +35,8 @@ import template from './ngx-form-element.component.html';
  * @implements {OnInit}
  */
 @Component({
-  moduleId: module.id,
   selector: 'ngx-form-element',
-  template,
+  templateUrl: './ngx-form-element.component.html',
   providers: [
     ErrorService,
     ValidatorService
