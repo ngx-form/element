@@ -12,7 +12,7 @@ export default {
     // core output options
     file: 'dist/bundle.umd.js',    // required
     format: 'umd',  // required
-    name: '@ngx-form/element',
+    name: 'ngx.form_element',
     globals: {},
 
     // advanced output options
