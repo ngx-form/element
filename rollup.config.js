@@ -7,23 +7,36 @@ import uglify from 'rollup-plugin-uglify';
 import { minify } from 'uglify-es';
 
 export default {
-  entry: 'src/index.ts',
-  dest: 'dist/bundle.umd.js',
-  exports: 'named',
-  sourceMap: true,
-  format: 'umd',
-  moduleName: '@ngx-form/element',
+  input: 'dist/index.js',
+  output: {
+    // core output options
+    file: 'dist/bundle.umd.js',    // required
+    format: 'umd',  // required
+    name: '@ngx-form/element',
+    globals: {},
+
+    // advanced output options
+    // paths: ,
+    // banner: ,
+    // footer: ,
+    // intro:,
+    // outro: ,
+    sourcemap: true, // true | inline
+    // sourcemapFile: ,
+    // interop: ,
+
+    // danger zone
+    exports: 'named',
+    // amd: ,
+    // indent: , 
+    // strict: 
+  },
   onwarn,
   plugins: [
     angular(),
     commonjs(),
     nodeResolve({
-      // use "es2015" field for ES2015 modules with ES2015 code,
-	    // if possible
-      es2015: true, // Default: false
-
-      // use "module" field for ES2015 modules with ES5 code,
-      // if possible
+      // use "module" field for ES6 module if possible
       module: true, // Default: true
 
       // use "jsnext:main" if possible
@@ -35,7 +48,30 @@ export default {
       // – see https://github.com/rollup/rollup-plugin-commonjs
       main: true,  // Default: true
 
-      extensions: [ '.js', '.json' ]
+      // some package.json files have a `browser` field which
+      // specifies alternative files to load for people bundling
+      // for the browser. If that's you, use this option, otherwise
+      // pkg.browser will be ignored
+      browser: true,  // Default: false
+
+      // not all files you want to resolve are .js files
+      extensions: [ '.js', '.json' ],  // Default: ['.js']
+
+      // whether to prefer built-in modules (e.g. `fs`, `path`) or
+      // local ones with the same names
+      preferBuiltins: true,  // Default: true
+
+      // Lock the module search in this path (like a chroot). Module defined
+      // outside this path will be mark has external
+      jail: '/', // Default: '/'
+
+      // If true, inspect resolved files to check that they are
+      // ES2015 modules
+      modulesOnly: false, // Default: false
+
+      // Any additional options that should be passed through
+      // to node-resolve
+      customResolveOptions: {}
     }),
     typescript({
       typescript: require('./node_modules/typescript')
