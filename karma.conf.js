@@ -44,7 +44,7 @@ module.exports = function(config) {
 
     rollupPreprocessor: {
       // will help to prevent conflicts between different tests entries
-      moduleName: 'ngx-form.element',
+      moduleName: 'ngx.form_element',
       format: 'iife',
       sourceMap: false,
       // rollup settings. See Rollup documentation
