@@ -1,6 +1,7 @@
 // Karma configuration
 
 const angular = require('rollup-plugin-angular');
+const buble = require('rollup-plugin-buble');
 const commonjs = require('rollup-plugin-commonjs');
 const nodeResolve = require('rollup-plugin-node-resolve');
 const typescript = require('rollup-plugin-typescript');
@@ -44,12 +45,16 @@ module.exports = function(config) {
 
     rollupPreprocessor: {
       // will help to prevent conflicts between different tests entries
+      external: [
+        '@ngx-form/interface'
+      ],
       moduleName: 'ngx.form_element',
-      format: 'iife',
+      format: 'umd',
       sourceMap: false,
       // rollup settings. See Rollup documentation
       plugins: [
         angular(),
+        buble(),
         commonjs(),
         nodeResolve({
           // use "module" field for ES6 module if possible
@@ -92,7 +97,10 @@ module.exports = function(config) {
         typescript({
           typescript: require('./node_modules/typescript')
         })
-      ]
+      ],
+      globals: {
+        '@ngx-form/interface': 'ngx.form_interface'
+      }
     },
 
     // test results reporter to use
