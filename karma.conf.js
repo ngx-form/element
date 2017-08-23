@@ -48,13 +48,12 @@ module.exports = function(config) {
       external: [
         '@ngx-form/interface'
       ],
-      moduleName: 'ngx.form_element',
+      moduleName: 'ngx.form.element',
       format: 'umd',
       sourceMap: false,
       // rollup settings. See Rollup documentation
       plugins: [
         angular(),
-        buble(),
         commonjs(),
         nodeResolve({
           // use "module" field for ES6 module if possible
@@ -99,7 +98,7 @@ module.exports = function(config) {
         })
       ],
       globals: {
-        '@ngx-form/interface': 'ngx.form_interface'
+        '@ngx-form/interface': 'ngx.form.interface'
       }
     },
 
