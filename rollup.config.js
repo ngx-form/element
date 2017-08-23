@@ -1,19 +1,44 @@
 
 import angular from 'rollup-plugin-angular';
+import buble from 'rollup-plugin-buble';
 import commonjs from 'rollup-plugin-commonjs';
 import nodeResolve from 'rollup-plugin-node-resolve';
 import typescript from 'rollup-plugin-typescript';
 import uglify from 'rollup-plugin-uglify';
 import { minify } from 'uglify-es';
 
+import sass from 'node-sass';
+import CleanCSS from 'clean-css';
+import { minify as minifyHtml } from 'html-minifier';
+
+const cssmin = new CleanCSS();
+const htmlminOpts = {
+  caseSensitive: true,
+  collapseWhitespace: true,
+  removeComments: true,
+};
+
 export default {
   input: 'dist/index.js',
+  external: [
+    '@ngx-form/interface'
+  ],
   output: {
     // core output options
     file: 'dist/bundle.umd.js',    // required
     format: 'umd',  // required
-    name: 'ngx.form_element',
-    globals: {},
+    name: 'ngx.form.element',
+    
+    globals: {
+      '@angular/core': 'ng.core',
+      'rxjs/Subject': 'Subject',
+      '@angular/forms': 'ng.forms',
+      '@ngx-core/common': 'ngx.core.common',
+      '@ngx-form/interface': 'ngx.form.interface',
+      '@angular/common': 'ng.common',
+      '@angular/material': 'ng.material'
+    },
+    
 
     // advanced output options
     // paths: ,
@@ -33,7 +58,16 @@ export default {
   },
   onwarn,
   plugins: [
-    angular(),
+    angular({
+      preprocessors: {
+        template: template => minifyHtml(template, htmlminOpts),
+        style: scss => {
+          const css = sass.renderSync({ data: scss }).css;
+          return cssmin.minify(css).styles;
+        },
+      }
+    }),
+    buble(),
     commonjs(),
     nodeResolve({
       // use "module" field for ES6 module if possible
@@ -63,7 +97,7 @@ export default {
 
       // Lock the module search in this path (like a chroot). Module defined
       // outside this path will be mark has external
-      jail: '/', // Default: '/'
+      jail: '/src', // Default: '/'
 
       // If true, inspect resolved files to check that they are
       // ES2015 modules
