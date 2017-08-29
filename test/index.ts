@@ -1,6 +1,6 @@
 import 'reflect-metadata';
-import 'core-js/es6';
-import 'core-js/es7/reflect';
+// import 'core-js/es6';
+// import 'core-js/es7/reflect';
 
 import 'zone.js/dist/zone';
 import 'zone.js/dist/long-stack-trace-zone';
@@ -15,7 +15,6 @@ import 'rxjs/Rx';
 
 import * as browser from '@angular/platform-browser-dynamic/testing';
 import * as testing from '@angular/core/testing';
-
 testing.TestBed.initTestEnvironment(
   browser.BrowserDynamicTestingModule,
   browser.platformBrowserDynamicTesting()
