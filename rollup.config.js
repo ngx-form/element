@@ -7,6 +7,7 @@ import typescript from 'rollup-plugin-typescript';
 import uglify from 'rollup-plugin-uglify';
 import { minify } from 'uglify-es';
 
+// rollup-plugin-angular addons
 import sass from 'node-sass';
 import CleanCSS from 'clean-css';
 import { minify as minifyHtml } from 'html-minifier';
@@ -27,7 +28,7 @@ export default {
     // core output options
     file: 'dist/bundle.umd.js',    // required
     format: 'umd',  // required
-    name: 'ngx.form.element',
+    name: 'ngx-form.element',
     
     globals: {
       '@angular/core': 'ng.core',
