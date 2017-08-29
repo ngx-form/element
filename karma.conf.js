@@ -1,10 +1,24 @@
 // Karma configuration
 
 const angular = require('rollup-plugin-angular');
-const buble = require('rollup-plugin-buble');
 const commonjs = require('rollup-plugin-commonjs');
 const nodeResolve = require('rollup-plugin-node-resolve');
 const typescript = require('rollup-plugin-typescript');
+const uglify = require('rollup-plugin-uglify');
+const uglifyEs = require('uglify-es');
+
+
+// rollup-plugin-angular addons
+const sass = require('node-sass');
+const CleanCSS = require('clean-css');
+const htmlMinifier = require('html-minifier');
+
+const cssmin = new CleanCSS();
+const htmlminOpts = {
+  caseSensitive: true,
+  collapseWhitespace: true,
+  removeComments: true,
+};
 
 module.exports = function(config) {
   config.set({
@@ -15,7 +29,7 @@ module.exports = function(config) {
 
     // frameworks to use
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-    frameworks: ['jasmine', 'karma-typescript'],
+    frameworks: ['jasmine'],
 
 
     // list of files / patterns to load in the browser
@@ -26,12 +40,13 @@ module.exports = function(config) {
 
 
     plugins: [
+      require('karma-jasmine'),
+      require('karma-chrome-launcher'),
+      require('karma-jasmine-html-reporter'),
       require('karma-firefox-launcher'),
       require('karma-coverage'),
       require('karma-rollup-preprocessor'),
-      require('karma-jasmine'),
-      require('karma-typescript')
-    ],    
+    ],
 
     // list of files to exclude
     exclude: [],
@@ -44,16 +59,24 @@ module.exports = function(config) {
     },
 
     rollupPreprocessor: {
-      // will help to prevent conflicts between different tests entries
       external: [
         '@ngx-form/interface'
       ],
-      moduleName: 'ngx.form.element',
+      // will help to prevent conflicts between different tests entries
+      name: 'ngx-form.element',
       format: 'umd',
-      sourceMap: false,
+      sourcemap: 'inline',
       // rollup settings. See Rollup documentation
       plugins: [
-        angular(),
+        angular({
+          preprocessors: {
+            template: template => htmlMinifier.minify(template, htmlminOpts),
+            style: scss => {
+              const css = sass.renderSync({ data: scss }).css;
+              return cssmin.minify(css).styles;
+            },
+          }
+        }),
         commonjs(),
         nodeResolve({
           // use "module" field for ES6 module if possible
@@ -72,7 +95,7 @@ module.exports = function(config) {
           // specifies alternative files to load for people bundling
           // for the browser. If that's you, use this option, otherwise
           // pkg.browser will be ignored
-          browser: true,  // Default: false
+          browser: false,  // Default: false
     
           // not all files you want to resolve are .js files
           extensions: [ '.js', '.json' ],  // Default: ['.js']
@@ -95,17 +118,18 @@ module.exports = function(config) {
         }),
         typescript({
           typescript: require('./node_modules/typescript')
-        })
+        }),
+        uglify({}, uglifyEs.minify)
       ],
       globals: {
-        '@ngx-form/interface': 'ngx.form.interface'
+        '@ngx-form/interface': 'ngx-form.interface'
       }
     },
 
     // test results reporter to use
     // possible values: 'dots', 'progress'
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-    reporters: ['progress'],
+    reporters: ['progress', 'kjhtml'],
 
 
     // web server port
