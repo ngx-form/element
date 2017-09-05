@@ -131,9 +131,11 @@ export class FormElementComponent extends FormElementClass implements AfterViewC
     }
 
     // do not assign attributes to __component instance
-    changes = this.differ['attributes'].diff(this.config['attributes']);
-    if (changes) {
-      this.applyChanges(changes, false);
+    if (this.config) {
+      changes = this.differ['attributes'].diff(this.config['attributes']);
+      if (changes) {
+        this.applyChanges(changes, false);
+      }
     }
     this.errorService.check();
   }
