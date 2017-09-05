@@ -17,4 +17,4 @@ testing.TestBed.initTestEnvironment(
 );
 
 Error.stackTraceLimit = Infinity;
-jasmine.DEFAULT_TIMEOUT_INTERVAL = 2000;
+jasmine.DEFAULT_TIMEOUT_INTERVAL = 4000;
