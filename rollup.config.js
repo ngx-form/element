@@ -1,6 +1,5 @@
 
 import angular from 'rollup-plugin-angular';
-import buble from 'rollup-plugin-buble';
 import commonjs from 'rollup-plugin-commonjs';
 import nodeResolve from 'rollup-plugin-node-resolve';
 import typescript from 'rollup-plugin-typescript';
@@ -21,9 +20,6 @@ const htmlminOpts = {
 
 export default {
   input: 'dist/index.js',
-  external: [
-    '@ngx-form/interface'
-  ],
   output: {
     // core output options
     file: 'dist/bundle.umd.js',    // required
@@ -34,8 +30,8 @@ export default {
       '@angular/core': 'ng.core',
       'rxjs/Subject': 'Subject',
       '@angular/forms': 'ng.forms',
-      '@ngx-core/common': 'ngx.core.common',
-      '@ngx-form/interface': 'ngx.form.interface',
+      '@ngx-core/common': 'ngx-core.common',
+      '@ngx-form/interface': 'ngx-form.interface',
       '@angular/common': 'ng.common',
       '@angular/material': 'ng.material'
     },
@@ -68,7 +64,6 @@ export default {
         },
       }
     }),
-    buble(),
     commonjs(),
     nodeResolve({
       // use "module" field for ES6 module if possible
