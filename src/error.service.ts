@@ -42,18 +42,20 @@ export class ErrorService {
    * @memberof ErrorService
    */
   public check(): void {
-    if (this.formControl['errors']) {
-      this.availableValidators.forEach((validator, index) => {
-        if (this.formControl.hasError(validator)) {
-          if (typeof this[validator] === 'function') {
-            this.error = {
-              message: this[validator](),
-              originalError: this.formControl.errors
-            };
+    if (this.formControl) {
+      if (this.formControl.errors) {
+        this.availableValidators.forEach((validator, index) => {
+          if (this.formControl.hasError(validator)) {
+            if (typeof this[validator] === 'function') {
+              this.error = {
+                message: this[validator](),
+                originalError: this.formControl.errors
+              };
+            }
           }
-        }
-      });
-      this.errorSource.next(this.error);
+        });
+        this.errorSource.next(this.error);
+      }
     }
   }
 
