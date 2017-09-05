@@ -1,4 +1,3 @@
-import 'core-js';
 import 'reflect-metadata';
 import 'rxjs/Rx';
 import 'zone.js/dist/zone';
