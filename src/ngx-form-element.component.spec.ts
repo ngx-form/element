@@ -14,6 +14,7 @@ beforeAll(() => {
   TestBed.resetTestEnvironment();
   TestBed.initTestEnvironment(BrowserDynamicTestingModule, platformBrowserDynamicTesting());
 });
+
 describe('FormElementComponent', () => {
 
   let comp: FormElementComponent;
@@ -48,6 +49,7 @@ describe('FormElementComponent', () => {
     expect(fixture).toBeDefined();
     expect(comp).toBeTruthy();
   }));
+
   it('should have div', async(() => {
     expect(nativeElement.querySelector('div')).toBeTruthy();
   }));
