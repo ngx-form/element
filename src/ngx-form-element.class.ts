@@ -16,10 +16,8 @@ import {
   FormGroup,
   Validators
 } from '@angular/forms';
-
-/* TODO: remove when test in karma ... */
-import { FormElementInterface } from '@ngx-form/interface';
 import { element } from '@ngx-form/type';
+import { FormElementInterface } from '@ngx-form/interface';
 
 // internal
 import { ErrorService } from './error.service';
@@ -35,10 +33,10 @@ import { ValidatorService } from './validator.service';
 export abstract class FormElementClass extends DynamicComponentClass {
   /**
    * Main @Input('config') that is used to assign all possible `properties` specified in its interface.
-   * @type {FormElementDataInterface}
+   * @type {FormElementInterface}
    * @memberof FormElementClass
    */
-  @Input('config') config: FormElementInterface;
+  @Input('config') config: FormElementInterface | undefined;
 
     /**
    * @type {FormGroup}
@@ -102,57 +100,63 @@ export abstract class FormElementClass extends DynamicComponentClass {
    * @memberof FormElementClass
    */
   public create(): void {
-    const createElement = this.formElementService.find(this.config.element);
-    if (createElement) {
-      this.__create(createElement);
-      this.removed = false;
-      // add formGroup if not exists
-      if (!this.formGroup) {
-        this.formGroup = this.formBuilder.group({});
+    if (this.config) {
+      const createElement = this.formElementService.find(this.config.element);
+
+      if (createElement) {
+        this.__create(createElement);
+        this.removed = false;
+        // add formGroup if not exists
+        if (!this.formGroup) {
+          this.formGroup = this.formBuilder.group({});
+        }
+        this.__assign<Object>('model', this.model);
+        this.__assign<FormGroup>('formGroup', this.formGroup);
+        this.formGroup.controls[this.config.key] = new FormControl();
+        this.formControl().markAsTouched();
+        this.validatorService.setFormControl(this.formControl());
+        this.errorService.setFormControl(this.formControl());
+
+        // assign config to __component instance
+        if (this.config) {
+          Object.keys(this.config).forEach((prop, index) => {
+            if (this.config) {
+              this.validatorService.patchValidators(prop, this.config[prop]);
+
+              if (this.config[prop] instanceof Object) {
+                Object.keys(this.config[prop]).forEach(subprop => {
+                  if (this.config) {
+                    this.validatorService.patchValidators(subprop, this.config[prop][subprop]);
+                  }
+                });
+              }
+              // assign to created __component instance
+              this.__assign(prop, this.config[prop]);
+            }
+          })
+
+          this.__subscribe('cancelled', this.onCancelled);
+          this.__subscribe('changed', this.onChanged);
+          this.__subscribe('submitted', this.onSubmitted);
+
+          // subscribe to valueChanges in formGroup
+          this.formControl().valueChanges.subscribe(model => this.updateValueAndValidity());
+          // this.formControl().statusChanges.subscribe(() => { });
+
+          this.created.emit(true);
+          this.destroyed.emit(false);
+        }
+      } else {
+        throw new Error(`
+          You need to define FormElementConfig for example as below:
+          FormElementModule.forRoot({
+              elements: [
+                { name: 'input', component: YourInputComponent },
+                { name: 'select', component: YourSelectComponent }
+              ]
+            }),
+        `);
       }
-      this.__assign<Object>('model', this.model);
-      this.__assign<FormGroup>('formGroup', this.formGroup);
-      this.formGroup.controls[this.config.key] = new FormControl();
-      this.formControl().markAsTouched();
-      this.validatorService.setFormControl(this.formControl());
-      this.errorService.setFormControl(this.formControl());
-
-      // assign config to __component instance
-      if (this.config) {
-        Object.keys(this.config).forEach((prop, index) => {
-          this.validatorService.patchValidators(prop, this.config[prop]);
-
-          if (this.config[prop] instanceof Object) {
-            Object.keys(this.config[prop]).forEach(subprop => {
-              this.validatorService.patchValidators(subprop, this.config[prop][subprop]);
-            });
-          }
-
-          // assign to created __component instance
-          this.__assign(prop, this.config[prop]);
-        })
-
-        this.__subscribe('cancelled', this.onCancelled);
-        this.__subscribe('changed', this.onChanged);
-        this.__subscribe('submitted', this.onSubmitted);
-
-        // subscribe to valueChanges in formGroup
-        this.formControl().valueChanges.subscribe(model => this.updateValueAndValidity());
-        // this.formControl().statusChanges.subscribe(() => { });
-
-        this.created.emit(true);
-        this.destroyed.emit(false);
-      }
-    } else {
-      throw new Error(`
-        You need to define FormElementConfig for example as below:
-        FormElementModule.forRoot({
-            elements: [
-              { name: 'input', component: YourInputComponent },
-              { name: 'select', component: YourSelectComponent }
-            ]
-          }),
-      `);
     }
   }
 
@@ -162,8 +166,8 @@ export abstract class FormElementClass extends DynamicComponentClass {
    * @returns {AbstractControl}
    * @memberof FormElementClass
    */
-  public formControl(key?: string): AbstractControl {
-    return this.formGroup.controls[key ? key : this.config.key];
+  public formControl(key?: string): AbstractControl  {
+    return this.formGroup.controls[key ? key : ((this.config) ? this.config.key : '')];
   }
 
   public get(property: string): any {
@@ -177,8 +181,10 @@ export abstract class FormElementClass extends DynamicComponentClass {
    */
   private onCancelled = (result: any) => {
     this.cancelled.emit(result);
-    if (this.config.destroy && this.config.destroy.onCancelled === true) {
-      this.remove(this.config.destroy.onCancelled);
+    if (this.config) {
+      if (this.config.destroy && this.config.destroy.onCancelled === true) {
+        this.remove(this.config.destroy.onCancelled);
+      }
     }
   }
 
@@ -191,8 +197,10 @@ export abstract class FormElementClass extends DynamicComponentClass {
     if (result) {
       this.changed.emit(result);
     }
-    if (this.config.destroy && this.config.destroy.onChanged === true) {
-      this.remove(true);
+    if (this.config) {
+      if (this.config.destroy && this.config.destroy.onChanged === true) {
+        this.remove(true);
+      }
     }
   }
 
@@ -205,8 +213,10 @@ export abstract class FormElementClass extends DynamicComponentClass {
     if (result) {
       this.submitted.emit(result);
     }
-    if (this.config.destroy && this.config.destroy.onSubmitted === true) {
-      this.remove(true);
+    if (this.config) {
+      if (this.config.destroy && this.config.destroy.onSubmitted === true) {
+        this.remove(true);
+      }
     }
   }
 
@@ -236,7 +246,9 @@ export abstract class FormElementClass extends DynamicComponentClass {
    */
   removeFormControl() {
     setTimeout(() => {
-      this.formGroup.removeControl(this.config.key);
+      if (this.config) {
+        this.formGroup.removeControl(this.config.key);
+      }
     });
   }
 
