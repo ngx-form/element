@@ -1,3 +1,4 @@
+/// <reference path="../typings/index.d.ts" />
 import {
   Component,
   ComponentFactoryResolver,
@@ -8,8 +9,8 @@ import {
 
 import { FormBuilder } from '@angular/forms';
 
-import { FormElementClass } from './../src/ngx-form-element.class';
-import { FormElementService } from './../src/ngx-form-element.service';
+import { FormElementClass } from './ngx-form-element.class';
+import { FormElementService } from './ngx-form-element.service';
 import { ValidatorService } from './validator.service';
 import { ErrorService } from './error.service';
 
