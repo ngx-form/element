@@ -5,8 +5,7 @@
 [![Build Status](https://travis-ci.org/ngx-form/element.svg?branch=master)](https://travis-ci.org/ngx-form/element)
 [![Semver](http://img.shields.io/SemVer/2.0.0.png)](http://semver.org/spec/v2.0.0.html)
 [![npm version](https://badge.fury.io/js/%40ngx-form%2Felement.svg)](https://badge.fury.io/js/%40ngx-form%2Felement)
-[![GitHub version](https://badge.fury.io/gh/ngx-form%2Felement.svg)]
-(https://badge.fury.io/gh/ngx-form%2Felement)
+[![GitHub version](https://badge.fury.io/gh/ngx-form%2Felement.svg)](https://badge.fury.io/gh/ngx-form%2Felement)
 
 [![Package Quality](http://npm.packagequality.com/shield/ngx-form.svg)](http://packagequality.com/#?package=ngx-form)
 [![Known Vulnerabilities](https://snyk.io/test/npm/@ngx-form/element/badge.svg)](https://snyk.io/test/npm/@ngx-form/element)
