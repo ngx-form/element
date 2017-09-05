@@ -3,6 +3,7 @@ import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup } from '@angul
 import { BrowserDynamicTestingModule, platformBrowserDynamicTesting } from '@angular/platform-browser-dynamic/testing';
 import { TestBed, async, inject, ComponentFixture } from '@angular/core/testing';
 import { FormElementInterface } from '@ngx-form/interface';
+import * as lodash from 'lodash-es';
 
 // internal
 import { FormElementComponent } from './ngx-form-element.component';
@@ -53,20 +54,16 @@ describe('FormElementModule', () => {
   }));
   it('should have properties defined equal to config', async(() => {
     comp.config = config;
-    for (const property in config) {
-      if (property) {
-        expect(comp.config[property]).toEqual(config[property]);
-      }
-    }
+    lodash.each(config, (value, property) => {
+      expect(comp.config[property]).toEqual(config[property]);
+    });
   }));
   it('should have properties defined in property `__component` instance', async(() => {
     comp.config = config;
     comp.ngOnInit();
-    for (const property in config) {
-      if (property) {
-        expect(comp.get('__component').instance[property]).toEqual(config[property]);
-      }
-    }
+    lodash.each(config, (value, property) => {
+      expect(comp.get('__component').instance[property]).toEqual(config[property]);
+    });
   }));
   it('should have subscribe to cancelled, changed, submitted EventEmitter', async(() => {
     comp.config = config
