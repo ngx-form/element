@@ -1,6 +1,6 @@
-import { ConfigElementInterface } from '@ngx-form/interface';
+import { FormElementInterface } from '@ngx-form/interface';
 
-export const config: ConfigElementInterface = {
+export const element: FormElementInterface = {
   attributes: {
     autocomplete: 'off',
 
