@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 // internal
 import { component } from '@ngx-core/common';
 import { element } from '@ngx-form/type';
-import { FormElementConfigInterface, ConfigElementInterface } from '@ngx-form/interface';
+import { FormElementConfigInterface } from '@ngx-form/interface';
 
 /**
  * forRoot config with possible elements to create.
@@ -14,7 +14,12 @@ import { FormElementConfigInterface, ConfigElementInterface } from '@ngx-form/in
  */
 @Injectable()
 export class FormElementConfig implements FormElementConfigInterface {
-  elements: Array<ConfigElementInterface>;
+  elements: {
+    [index: number]: {
+      name: element;
+      component: component;
+    }
+  }
   errorMessages?: {};
 };
 
