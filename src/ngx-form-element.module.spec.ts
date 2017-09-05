@@ -2,6 +2,7 @@
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
 import { BrowserDynamicTestingModule, platformBrowserDynamicTesting } from '@angular/platform-browser-dynamic/testing';
 import { TestBed, async, inject, ComponentFixture } from '@angular/core/testing';
+import { FormElementInterface } from '@ngx-form/interface';
 
 // internal
 import { FormElementComponent } from './ngx-form-element.component';
@@ -9,8 +10,8 @@ import { FormElementModule } from './ngx-form-element.module';
 import { FormElementService } from './ngx-form-element.service';
 import { ValidatorService } from './validator.service';
 
-import { TestHolderFormElementModule } from './ngx-form-element.module.test';
-import { config } from './../test/config';
+import { PrimaryModule } from './ngx-form-element.module.test';
+import { element } from './../test/element';
 import { model } from './../test/model';
 
 beforeAll(() => {
@@ -23,13 +24,14 @@ describe('FormElementModule', () => {
   let comp: FormElementComponent;
   let fixture: ComponentFixture<FormElementComponent>;
   let nativeElement: any;
+  let config: FormElementInterface;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
         FormsModule,
         ReactiveFormsModule,
-        TestHolderFormElementModule
+        PrimaryModule
       ],
     }).compileComponents();
   }));
@@ -39,6 +41,7 @@ describe('FormElementModule', () => {
     fixture = TestBed.createComponent(FormElementComponent);
     nativeElement = fixture.debugElement.nativeElement;
     comp = fixture.componentInstance;
+    config = element;
   });
 
   it('should create FormElementComponent', async(() => {
@@ -49,10 +52,10 @@ describe('FormElementModule', () => {
     expect(nativeElement.querySelector('div')).toBeTruthy();
   }));
   it('should have properties defined equal to config', async(() => {
-    comp.config = config[0];
-    for (const property in config[0]) {
+    comp.config = config;
+    for (const property in config) {
       if (property) {
-        expect(comp[property]).toEqual(config[0][property]);
+        expect(comp.config[property]).toEqual(config[property]);
       }
     }
   }));
