@@ -4,7 +4,6 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 // internal
 import { FormElementModule } from './ngx-form-element.module';
-import { FormElementConfig } from './ngx-form-element.service';
 import { InputComponent } from './../test/input.component';
 
 @NgModule({
@@ -25,7 +24,7 @@ import { InputComponent } from './../test/input.component';
     ReactiveFormsModule
   ]
 })
-export class TestFormElementModule {
+export class FormElementTestModule {
   constructor() { }
 }
 
@@ -35,9 +34,9 @@ export class TestFormElementModule {
     CommonModule,
     ReactiveFormsModule,
     FormElementModule.forRoot(),
-    TestFormElementModule,
+    FormElementTestModule,
   ]
 })
-export class TestHolderFormElementModule {
+export class PrimaryModule {
   constructor() { }
 }
