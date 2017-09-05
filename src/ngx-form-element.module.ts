@@ -1,4 +1,5 @@
 // external
+import 'hammerjs';
 import { Inject, ModuleWithProviders, NgModule, Optional } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
