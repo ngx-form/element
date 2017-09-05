@@ -1,17 +1,24 @@
 {
   "angularCompilerOptions": {
-    "genDir": "./aot",
+    "genDir": "aot",
     "strictMetadataEmit": true,
     "skipTemplateCodegen": true,
     "skipMetadataEmit" : false
   },
   "compileOnSave": false,
   "compilerOptions": {
+    // "rootDir": "./",
+    "baseUrl": "src",
     "declaration": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
+    "lib": [
+      "es6", 
+      "dom"
+    ],
     "module": "es2015",
     "moduleResolution": "node",
+    "noEmitOnError": false,
     "noImplicitAny": true,
     "outDir": "dist",
     "preserveConstEnums": true,
@@ -22,15 +29,16 @@
     "removeComments": true,
     "target": "es2015",
     "typeRoots": [
-      "./node_modules/@types"
-    ],
-    "lib": [
-      "es6", 
-      "dom"
+      "node_modules/@types"
     ]
   },
   "files": [
-    "./src/index.ts",
-    "./typings.d.ts"
+    "src/index.ts"
+  ],
+  "include": [ ],
+  "exclude": [
+    "test.ts",
+    "**/*.spec.ts",
+    "node_modules"
   ]
 }
