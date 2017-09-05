@@ -59,12 +59,10 @@ module.exports = function(config) {
     preprocessors: {
       'test/*.ts': ['rollup'],
       'src/*.spec.ts': ['rollup'],
+      'src/**/*.spec.ts': ['rollup'],
     },
 
     rollupPreprocessor: {
-      external: [
-        '@ngx-form/interface'
-      ],
       // will help to prevent conflicts between different tests entries
       name: 'ngx-form.element',
       format: 'umd',
@@ -122,11 +120,8 @@ module.exports = function(config) {
         typescript({
           typescript: require('./node_modules/typescript')
         }),
-        uglify({}, uglifyEs.minify)
-      ],
-      globals: {
-        '@ngx-form/interface': 'ngx-form.interface'
-      }
+        // uglify({}, uglifyEs.minify)
+      ]
     },
 
     // test results reporter to use
