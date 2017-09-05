@@ -37,7 +37,7 @@ Angular 2+ module to dynamically create previously configured html form element 
 To install, run:
 
 ```bash
-npm install --save @ngx-form/element
+npm install --save @ngx-form/element @ngx-form/interface
 ```
 
 ## Usage
